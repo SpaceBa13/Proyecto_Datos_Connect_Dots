@@ -33,7 +33,7 @@ public class Cliente extends Observable implements Runnable{
         int puerto_destino;
         Paquete_Datos paquete_recibido;
         try {
-            Socket socket = new Socket(IP, 10000);
+            Socket socket = new Socket(IP, 11111);
             Paquete_Datos envio = new Paquete_Datos();
             envio.setMensaje(mensaje);
             envio.setUser(user);

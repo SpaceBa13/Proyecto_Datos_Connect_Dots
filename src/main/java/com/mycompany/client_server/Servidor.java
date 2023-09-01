@@ -10,8 +10,6 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  *
@@ -20,8 +18,13 @@ import java.util.Observer;
 public class Servidor implements Runnable{
 
     LinkedList lista_clientes = new LinkedList();
-    Queue cola_cllientes = new Queue();
+    Queue cola_clientes = new Queue();
 
+    public void agregar_cliente_cola(Object puerto){
+       if(cola_clientes.Search(puerto) == false){
+           cola_clientes.enqueue(puerto);
+       }
+    }
 
 
     public void agregar_cliente(int puerto){
@@ -75,7 +78,7 @@ public class Servidor implements Runnable{
     @Override
     public void run() {
         try {
-            ServerSocket servidor = new ServerSocket(10000);
+            ServerSocket servidor = new ServerSocket(11111);
             String IP = "127.0.0.1";
             String nick, mensaje;
             int puerto_destino;
@@ -90,6 +93,9 @@ public class Servidor implements Runnable{
                 mensaje = paquete_recibido.getMensaje();
                 puerto_destino = paquete_recibido.getPuerto();
                 agregar_cliente(puerto_destino);
+                System.out.println("Cola aqui:");
+                agregar_cliente_cola(puerto_destino);
+                cola_clientes.Display();
                 System.out.println("Nickname: " + nick);
                 System.out.println("Mensaje: " + mensaje);
                 System.out.println("Puerto del Cliente: " + puerto_destino);
