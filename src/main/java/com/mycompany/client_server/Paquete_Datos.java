@@ -13,27 +13,21 @@ import java.io.Serializable;
 public class Paquete_Datos implements Serializable {
     private int puerto;
     private String user, mensaje;
-
     public String getMensaje() {
         return mensaje;
     }
-
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
-
     public String getUser() {
         return user;
     }
-
     public void setUser(String user) {
         this.user = user;
     }
-
     public int getPuerto() {
         return puerto;
     }
-
     public void setPuerto(int puerto) {
         this.puerto = puerto;
     }
