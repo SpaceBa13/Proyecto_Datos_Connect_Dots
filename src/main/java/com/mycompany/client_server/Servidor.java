@@ -64,6 +64,10 @@ public class Servidor implements Runnable{
     }
      int puerto;
 
+    /**
+     * Constructor
+     * @param puerto
+     */
     public Servidor(int puerto) {
         this.puerto = puerto;
     }

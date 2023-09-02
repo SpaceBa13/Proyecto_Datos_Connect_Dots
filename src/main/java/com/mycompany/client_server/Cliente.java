@@ -20,6 +20,12 @@ public class Cliente extends Observable implements Runnable{
     String user;
     int puerto_propio;
 
+    /**
+     * Constructor
+     * @param mensaje
+     * @param user
+     * @param puerto_propio
+     */
     public Cliente(String mensaje, String user, int puerto_propio) {
         this.mensaje = mensaje;
         this.puerto_propio = puerto_propio;
