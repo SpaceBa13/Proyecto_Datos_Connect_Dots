@@ -109,6 +109,10 @@ public class Ventana extends javax.swing.JFrame implements Observer {
     private void Send_TextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Send_TextActionPerformed
     }//GEN-LAST:event_Send_TextActionPerformed
 
+    /**
+     * Crea un opbjeto de la clase cliente y obtiene el nombre de usuario y el mensaje a enviar
+     * @param evt
+     */
     private void Send_BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Send_BtnActionPerformed
         String nick = this.nick_text.getText();
         String mensaje = this.Send_Text.getText();
@@ -149,8 +153,6 @@ public class Ventana extends javax.swing.JFrame implements Observer {
         }
         //</editor-fold>this.Chat_text.append("Puerto en escucha:" + "\n" + puerto_propio);
 
-
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -158,7 +160,6 @@ public class Ventana extends javax.swing.JFrame implements Observer {
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea Chat_text;
     private javax.swing.JButton Send_Btn;

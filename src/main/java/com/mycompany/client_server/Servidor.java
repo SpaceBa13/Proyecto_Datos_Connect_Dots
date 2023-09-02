@@ -11,13 +11,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- *
  * @author SpaceBa
  */
 public class Servidor implements Runnable{
-
     DoublyLinkedList lista_clientes = new DoublyLinkedList();
     Queue cola_clientes = new Queue();
+
+    public void enviar_cliente_atras(){
+        cola_clientes.peek();
+    }
 
     public void agregar_cliente_cola(Object puerto){
        if(cola_clientes.Search(puerto) == false){
@@ -29,11 +31,10 @@ public class Servidor implements Runnable{
             lista_clientes.addLast(puerto);
         }
     }
-
     public void Reenvio(String IP, Paquete_Datos entrada) throws IOException {
-        for(int i = 0; i < lista_clientes.size; i++) {
+        if(lista_clientes.size == 1){
             try {
-                Socket reenvio = new Socket(IP, (int) lista_clientes.get_index(i));
+                Socket reenvio = new Socket(IP, (int) lista_clientes.get_index(1));
                 ObjectOutputStream paquete_reenviar = new ObjectOutputStream(reenvio.getOutputStream());
                 paquete_reenviar.writeObject(entrada);
                 reenvio.close();
@@ -41,15 +42,25 @@ public class Servidor implements Runnable{
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }else {
+            for (int i = 1; i < lista_clientes.size + 1; i++) {
+                try {
+                    Socket reenvio = new Socket(IP, (int) lista_clientes.get_index(i));
+                    ObjectOutputStream paquete_reenviar = new ObjectOutputStream(reenvio.getOutputStream());
+                    paquete_reenviar.writeObject(entrada);
+                    reenvio.close();
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
-
     public static void main(String[] args) {
         Servidor server = new Servidor(10000);
         Thread hilo_servidor = new Thread(server);
         hilo_servidor.start();
         System.out.println("En espera....");
-
     }
      int puerto;
 
@@ -82,7 +93,9 @@ public class Servidor implements Runnable{
                 System.out.println("Nickname: " + nick);
                 System.out.println("Mensaje: " + mensaje);
                 System.out.println("Puerto del Cliente: " + puerto_destino);
-                System.out.println("Lista de clientes conectados" + lista_clientes);
+                System.out.println("Lista de clientes conectados: ");
+                lista_clientes.displayList();
+                System.out.println(lista_clientes.size);
                 //Reenvio de Datos almacenados en el servidor hacia los clientes
 
                 Reenvio(IP, paquete_recibido);

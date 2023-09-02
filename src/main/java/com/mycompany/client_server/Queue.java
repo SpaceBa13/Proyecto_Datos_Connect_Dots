@@ -12,6 +12,10 @@ public class Queue {
     public void Display(){
         this.lista.displayList();
     }
+
+    public Object peek(){
+        return this.lista.get_index(1);
+    }
     public boolean Search(Object valor) {
         if (this.lista.find(valor) == true) {
             return true;

@@ -3,7 +3,6 @@ package com.mycompany.client_server;
 public class DoublyLinkedList {
     Node head;
     Node tail;
-
     int size;
 
     public DoublyLinkedList() {
@@ -98,9 +97,14 @@ public class DoublyLinkedList {
         }
     }
     public Object get_index(int i) {
+        int position = 1;
         Node current = this.head;
-        for (int a = 0; a == i-1; i++){
-            current = current.getNext();
+        if(i == 1){
+            return current.getData();
+        }
+        while (current != null && position < i) {
+            current = current.next;
+            position++;
         }return current.getData();
     }
 }
