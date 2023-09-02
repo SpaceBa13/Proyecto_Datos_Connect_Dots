@@ -9,7 +9,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.LinkedList;
 
 /**
  *
@@ -17,7 +16,7 @@ import java.util.LinkedList;
  */
 public class Servidor implements Runnable{
 
-    LinkedList lista_clientes = new LinkedList();
+    DoublyLinkedList lista_clientes = new DoublyLinkedList();
     Queue cola_clientes = new Queue();
 
     public void agregar_cliente_cola(Object puerto){
@@ -25,32 +24,16 @@ public class Servidor implements Runnable{
            cola_clientes.enqueue(puerto);
        }
     }
-
-
-    public void agregar_cliente(int puerto){
-        if (lista_clientes.size() == 0){
-            lista_clientes.add(puerto);
-        }else{
-            for (int i = 0; i < lista_clientes.size(); i++) {
-                if(i == lista_clientes.size() - 1) {
-                    if (lista_clientes.get(i).equals(puerto)) {
-                        break;
-                    }else{
-                        lista_clientes.add(puerto);
-                    }
-                }else{
-                    if (lista_clientes.get(i).equals(puerto)) {
-                        break;
-                    }
-                }
-            }
+    public void agregar_cliente_lista(Object puerto){
+        if(lista_clientes.find(puerto) == false){
+            lista_clientes.addLast(puerto);
         }
     }
 
     public void Reenvio(String IP, Paquete_Datos entrada) throws IOException {
-        for(int i = 0; i < lista_clientes.size(); i++) {
+        for(int i = 0; i < lista_clientes.size; i++) {
             try {
-                Socket reenvio = new Socket(IP, (int) lista_clientes.get(i));
+                Socket reenvio = new Socket(IP, (int) lista_clientes.get_index(i));
                 ObjectOutputStream paquete_reenviar = new ObjectOutputStream(reenvio.getOutputStream());
                 paquete_reenviar.writeObject(entrada);
                 reenvio.close();
@@ -92,7 +75,7 @@ public class Servidor implements Runnable{
                 nick = paquete_recibido.getUser();
                 mensaje = paquete_recibido.getMensaje();
                 puerto_destino = paquete_recibido.getPuerto();
-                agregar_cliente(puerto_destino);
+                agregar_cliente_lista(puerto_destino);
                 System.out.println("Cola aqui:");
                 agregar_cliente_cola(puerto_destino);
                 cola_clientes.Display();

@@ -4,9 +4,12 @@ public class DoublyLinkedList {
     Node head;
     Node tail;
 
+    int size;
+
     public DoublyLinkedList() {
         this.head = null;
         this.tail = null;
+        this.size = 0;
     }
 
     public void addFirst(Object data) {
@@ -14,11 +17,13 @@ public class DoublyLinkedList {
         if (head == null) {
             head = temp;
             tail = temp;
+            size++;
         }
         else {
             temp.next = head;
             head.prev = temp;
             head = temp;
+            size++;
         }
     }
     public void addLast(Object data) {
@@ -26,11 +31,13 @@ public class DoublyLinkedList {
         if (tail == null) {
             head = temp;
             tail = temp;
+            size++;
         }
         else {
             tail.next = temp;
             temp.prev = tail;
             tail = temp;
+            size++;
         }
     }
 
@@ -41,12 +48,14 @@ public class DoublyLinkedList {
         if (head == tail) {
             head = null;
             tail = null;
+            size--;
             return null;
         }
         Node temp = head;
         head = head.next;
         head.prev = null;
         temp.next = null;
+        size--;
         return null;
     }
 
@@ -58,6 +67,7 @@ public class DoublyLinkedList {
         if (head == tail) {
             head = null;
             tail = null;
+            size--;
             return;
         }
 
@@ -65,6 +75,7 @@ public class DoublyLinkedList {
         tail = tail.prev;
         tail.next = null;
         temp.prev = null;
+        size--;
     }
 
     public boolean find(Object searchValue) {
@@ -85,5 +96,11 @@ public class DoublyLinkedList {
             System.out.println(current.getData());
             current = current.getNext();
         }
+    }
+    public Object get_index(int i) {
+        Node current = this.head;
+        for (int a = 0; a == i-1; i++){
+            current = current.getNext();
+        }return current.getData();
     }
 }
