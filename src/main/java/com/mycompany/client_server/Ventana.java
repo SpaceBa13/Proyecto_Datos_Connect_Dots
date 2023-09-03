@@ -13,7 +13,6 @@ import java.util.Random;
  * @author SpaceBa
  */
 public class Ventana extends javax.swing.JFrame implements Observer {
-
     Random puerto = new Random();
     int puerto_propio = puerto.nextInt(5000, 9999);
 
