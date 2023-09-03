@@ -6,9 +6,7 @@ package com.mycompany.client_server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Observable;
@@ -50,20 +48,27 @@ public class Cliente extends Observable implements Runnable{
 
             /*Json*/
             ObjectMapper envio_json = new ObjectMapper();
-            envio_json.writeValueAsString(envio);
+            String Envio_json = envio_json.writeValueAsString(envio);
 
             /*Envia el String en formato jason a traves del socket*/
-            ObjectOutputStream paquete_enviar = new ObjectOutputStream(socket.getOutputStream());
-            paquete_enviar.writeObject(envio);
+            DataOutputStream paquete_enviar = new DataOutputStream(socket.getOutputStream());
+            paquete_enviar.writeUTF(Envio_json);
             socket.close();
 
             ServerSocket servidor_cliente = new ServerSocket(puerto_propio);
             Socket recibir_datos;
             Paquete_Datos paquete_entrante;
+            String lectura_json;
             while(true){
                 recibir_datos = servidor_cliente.accept();
-                ObjectInputStream paquete_entrada = new ObjectInputStream(recibir_datos.getInputStream());
-                paquete_entrante = (Paquete_Datos) paquete_entrada.readObject();
+                DataInputStream paquete_entrada = new DataInputStream(recibir_datos.getInputStream());
+
+                /*Json*/
+                ObjectMapper recibido_json = new ObjectMapper();
+                lectura_json = (String) paquete_entrada.readUTF();
+                paquete_entrante = recibido_json.readValue(lectura_json, Paquete_Datos.class);
+
+
                 nick = paquete_entrante.getUser();
                 mensaje_recicibido = paquete_entrante.getMensaje();
                 puerto_destino = paquete_entrante.getPuerto();
@@ -81,8 +86,6 @@ public class Cliente extends Observable implements Runnable{
 
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
