@@ -18,7 +18,8 @@ public class Servidor implements Runnable{
     Queue cola_clientes = new Queue();
 
     public void enviar_cliente_atras(){
-        cola_clientes.peek();
+        cola_clientes.enqueue(cola_clientes.peek());
+        cola_clientes.dequeue();
     }
 
     public void agregar_cliente_cola(Object puerto){
@@ -93,13 +94,16 @@ public class Servidor implements Runnable{
                 agregar_cliente_lista(puerto_destino);
                 System.out.println("Cola aqui:");
                 agregar_cliente_cola(puerto_destino);
-                cola_clientes.Display();
                 System.out.println("Nickname: " + nick);
                 System.out.println("Mensaje: " + mensaje);
                 System.out.println("Puerto del Cliente: " + puerto_destino);
                 System.out.println("Lista de clientes conectados: ");
                 lista_clientes.displayList();
-                System.out.println(lista_clientes.size);
+                System.out.println("Lista de clientes conectados en cola: ");
+                cola_clientes.Display();
+                enviar_cliente_atras();
+                System.out.println("Lista de clientes conectados en cola: ");
+                cola_clientes.Display();
                 //Reenvio de Datos almacenados en el servidor hacia los clientes
 
                 Reenvio(IP, paquete_recibido);
