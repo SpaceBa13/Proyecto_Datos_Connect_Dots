@@ -4,6 +4,8 @@
  */
 package com.mycompany.client_server;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -40,11 +42,17 @@ public class Cliente extends Observable implements Runnable{
         Paquete_Datos paquete_recibido;
         try {
             Socket socket = new Socket(IP, 11111);
+            /*Crea una instancia del objeto Paquete de Datos para setear los datos a enviar*/
             Paquete_Datos envio = new Paquete_Datos();
             envio.setMensaje(mensaje);
             envio.setUser(user);
             envio.setPuerto(puerto_propio);
 
+            /*Json*/
+            ObjectMapper envio_json = new ObjectMapper();
+            envio_json.writeValueAsString(envio);
+
+            /*Envia el String en formato jason a traves del socket*/
             ObjectOutputStream paquete_enviar = new ObjectOutputStream(socket.getOutputStream());
             paquete_enviar.writeObject(envio);
             socket.close();

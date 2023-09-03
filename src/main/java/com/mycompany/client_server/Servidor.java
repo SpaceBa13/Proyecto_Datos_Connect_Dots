@@ -4,7 +4,10 @@
  */
 package com.mycompany.client_server;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -17,16 +20,28 @@ public class Servidor implements Runnable{
     DoublyLinkedList lista_clientes = new DoublyLinkedList();
     Queue cola_clientes = new Queue();
 
+    /**
+     * Envia al cliente que esta de primero en la cola al ultimo puesto
+     */
     public void enviar_cliente_atras(){
         cola_clientes.enqueue(cola_clientes.peek());
         cola_clientes.dequeue();
     }
 
+    /**
+     * Agrega los clientes a la cola para ser atendidos
+     * @param puerto
+     */
     public void agregar_cliente_cola(Object puerto){
        if(cola_clientes.Search(puerto) == false){
            cola_clientes.enqueue(puerto);
        }
     }
+
+    /**
+     * Agrega los clientes a una lista donde esta todos los conectados al servidor
+     * @param puerto
+     */
     public void agregar_cliente_lista(Object puerto){
         if(lista_clientes.find(puerto) == false){
             lista_clientes.addLast(puerto);
@@ -92,6 +107,8 @@ public class Servidor implements Runnable{
                 mensaje = paquete_recibido.getMensaje();
                 puerto_destino = paquete_recibido.getPuerto();
                 agregar_cliente_lista(puerto_destino);
+
+                /*Zona de Purebas*/
                 System.out.println("Cola aqui:");
                 agregar_cliente_cola(puerto_destino);
                 System.out.println("Nickname: " + nick);
