@@ -47,14 +47,20 @@ public class Servidor implements Runnable {
         }
     }
 
+    /**
+     * Renvia el paquete de datos a todos los clientes conectados (los que estan en la lista)
+     * @param IP
+     * @param entrada
+     * @throws IOException
+     */
     public void Reenvio(String IP, Paquete_Datos entrada) throws IOException {
         if (lista_clientes.size == 1) {
+            /*Envia a el cliente conectado si solo hay uno*/
             try {
                 Socket reenvio = new Socket(IP, (int) lista_clientes.get_index(1));
                 /*Json*/
                 ObjectMapper envio_json = new ObjectMapper();
                 String Envio_json = envio_json.writeValueAsString(entrada);
-
                 /*Envia el String en formato jason a traves del socket*/
                 DataOutputStream paquete_enviar = new DataOutputStream(reenvio.getOutputStream());
                 paquete_enviar.writeUTF(Envio_json);
@@ -64,13 +70,13 @@ public class Servidor implements Runnable {
                 throw new RuntimeException(e);
             }
         } else {
+            /*Funcion que envia a todos los clientes*/
             for (int i = 1; i < lista_clientes.size + 1; i++) {
                 try {
                     Socket reenvio = new Socket(IP, (int) lista_clientes.get_index(i));
                     /*Json*/
                     ObjectMapper envio_json = new ObjectMapper();
                     String Envio_json = envio_json.writeValueAsString(entrada);
-
                     /*Envia el String en formato jason a traves del socket*/
                     DataOutputStream paquete_enviar = new DataOutputStream(reenvio.getOutputStream());
                     paquete_enviar.writeUTF(Envio_json);
@@ -83,6 +89,10 @@ public class Servidor implements Runnable {
         }
     }
 
+    /**\
+     * Pone operativo el servidor y crea un hilo para que continue en escucha
+     * @param args
+     */
     public static void main(String[] args) {
         Servidor server = new Servidor(10000);
         Thread hilo_servidor = new Thread(server);
@@ -101,7 +111,9 @@ public class Servidor implements Runnable {
         this.puerto = puerto;
     }
 
-
+    /**
+     * Crea un socket para recibir datos constantemente
+     */
     @Override
     public void run() {
         try {
@@ -122,6 +134,7 @@ public class Servidor implements Runnable {
                 lectura_json = (String) paquete_entrada.readUTF();
                 paquete_recibido = recibido_json.readValue(lectura_json, Paquete_Datos.class);
 
+                /*Obtiene los datos del Objecto que entro por el socket*/
                 nick = paquete_recibido.getUser();
                 mensaje = paquete_recibido.getMensaje();
                 puerto_destino = paquete_recibido.getPuerto();

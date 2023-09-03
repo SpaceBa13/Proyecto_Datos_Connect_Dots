@@ -68,10 +68,12 @@ public class Cliente extends Observable implements Runnable{
                 lectura_json = (String) paquete_entrada.readUTF();
                 paquete_entrante = recibido_json.readValue(lectura_json, Paquete_Datos.class);
 
-
+                /*Obtiene los datos del Objecto que entro por el socket*/
                 nick = paquete_entrante.getUser();
                 mensaje_recicibido = paquete_entrante.getMensaje();
                 puerto_destino = paquete_entrante.getPuerto();
+
+                /*Pruebas*/
                 System.out.println("Nickname: " + nick);
                 System.out.println("Mensaje: " + mensaje_recicibido);
                 System.out.println("Puerto del Cliente: " + puerto_destino);
