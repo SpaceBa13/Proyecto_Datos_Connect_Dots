@@ -18,19 +18,27 @@ public class Matriz {
         row3.addLast(8);
         row3.addLast(9);
 
-        listota.addLast(row1.get_index(1));
-        listota.addLast(row1.get_index(2));
-        listota.addLast(row1.get_index(3)+"\n");
+        listota.addLast(row1);
+        listota.addLast(row2);
+        listota.addLast(row3);
 
-        listota.addLast(row2.get_index(1));
-        listota.addLast(row2.get_index(2));
-        listota.addLast(row2.get_index(3)+"\n");
+        //No sé porque System.out.println(listota.get_index(1).get_index(1)); me da error
+        //El error pasa porque al decir listota.get_index(1), tira la row1, pero luego no sé porque no me acepta el siguiente .get_index a ese row1
 
-        listota.addLast(row3.get_index(1));
-        listota.addLast(row3.get_index(2));
-        listota.addLast(row3.get_index(3));
-
-        listota.displayList();
-
+        /*
+        // Mostrar los datos como una matriz
+        for (int i = 0; i < listota.getSize(); i++) {
+            DoublyLinkedList current = listota.get_index(i);
+            for (int j = 0; j < current.getSize(); j++) {
+                System.out.print(current.get_index(j) + " ");
+            }
+            System.out.println(); // Salto de línea después de cada fila
+        }
+        */
     }
 }
+
+
+
+
+

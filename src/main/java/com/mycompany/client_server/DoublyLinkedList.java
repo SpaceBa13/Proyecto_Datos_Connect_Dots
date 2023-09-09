@@ -132,15 +132,21 @@ public class DoublyLinkedList {
     public Object get_index(int i) {
         int position = 1;
         Node current = this.head;
-        if(i == 1){
+        if (i == 1) {
             return current.getData();
         }
         while (current != null && position < i) {
             current = current.next;
             position++;
-        }return current.getData();
+        }
+        return current.getData();
     }
-    public int getSize(){
+
+    /**
+     * Retorna el tamaño de la lista
+     * @return
+     */
+    public int getSize() {
         return size;
     }
 }
