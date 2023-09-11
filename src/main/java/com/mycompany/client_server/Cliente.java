@@ -64,8 +64,11 @@ public class Cliente extends Observable implements Runnable{
                 DataInputStream paquete_entrada = new DataInputStream(recibir_datos.getInputStream());
 
                 /*Json*/
+                //Crea la instancia de la libreria jackson
                 ObjectMapper recibido_json = new ObjectMapper();
+                //Lee el String en formato json y lo guarda en una variable
                 lectura_json = (String) paquete_entrada.readUTF();
+                //Lo convierte en un objeto de la clase que necesito
                 paquete_entrante = recibido_json.readValue(lectura_json, Paquete_Datos.class);
 
                 /*Obtiene los datos del Objecto que entro por el socket*/

@@ -59,8 +59,11 @@ public class Servidor implements Runnable {
             try {
                 Socket reenvio = new Socket(IP, (int) lista_clientes.get_index(1));
                 /*Json*/
+                //Crea la instancia de la libreria jackson
                 ObjectMapper envio_json = new ObjectMapper();
+                //Escribe el String en formato json y lo guarda en una variable
                 String Envio_json = envio_json.writeValueAsString(entrada);
+                System.out.println("Impresion del Json: " + Envio_json);
                 /*Envia el String en formato jason a traves del socket*/
                 DataOutputStream paquete_enviar = new DataOutputStream(reenvio.getOutputStream());
                 paquete_enviar.writeUTF(Envio_json);
