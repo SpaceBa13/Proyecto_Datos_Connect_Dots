@@ -140,4 +140,11 @@ public class DoublyLinkedList {
             position++;
         }return current.getData();
     }
+    /**
+     * Retorna el tamaño de la lista
+     * @return
+     */
+    public int getSize() {
+        return size;
+    }
 }
