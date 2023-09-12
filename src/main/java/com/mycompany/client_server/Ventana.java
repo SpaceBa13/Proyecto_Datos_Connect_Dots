@@ -20,9 +20,7 @@ public class Ventana extends javax.swing.JFrame implements Observer {
     /**
      * Creates new form Ventana
      */
-    public Ventana() {
-        initComponents();
-    }
+    public Ventana() {initComponents();}
 
     /**
      * This method is called from within the constructor to initialize the form.
