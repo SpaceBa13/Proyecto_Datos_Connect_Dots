@@ -13,7 +13,6 @@ import java.util.Random;
  * @author SpaceBa
  */
 public class Ventana extends javax.swing.JFrame implements Observer {
-
     Random puerto = new Random();
     int puerto_propio = puerto.nextInt(5000, 9999);
 
@@ -21,9 +20,7 @@ public class Ventana extends javax.swing.JFrame implements Observer {
     /**
      * Creates new form Ventana
      */
-    public Ventana() {
-        initComponents();
-    }
+    public Ventana() {initComponents();}
 
     /**
      * This method is called from within the constructor to initialize the form.

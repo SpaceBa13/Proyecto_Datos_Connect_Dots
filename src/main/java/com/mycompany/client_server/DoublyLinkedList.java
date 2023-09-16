@@ -5,12 +5,19 @@ public class DoublyLinkedList {
     Node tail;
     int size;
 
+    /**
+     * Constructor
+     */
     public DoublyLinkedList() {
         this.head = null;
         this.tail = null;
         this.size = 0;
     }
 
+    /**
+     * Anade un elemento al principio de la lista
+     * @param data
+     */
     public void addFirst(Object data) {
         Node temp = new Node(data);
         if (head == null) {
@@ -25,6 +32,11 @@ public class DoublyLinkedList {
             size++;
         }
     }
+
+    /**
+     * anade un elemento al final de la lista
+     * @param data
+     */
     public void addLast(Object data) {
         Node temp = new Node(data);
         if (tail == null) {
@@ -40,6 +52,10 @@ public class DoublyLinkedList {
         }
     }
 
+    /**
+     * Elimina el primer elemnto de la lista
+     * @return
+     */
     public Object deleteFirst() {
         if (head == null) {
             return null;
@@ -58,6 +74,9 @@ public class DoublyLinkedList {
         return null;
     }
 
+    /**
+     * Elimina el ultimo elemento de la lista
+     */
     public void deleteLast() {
         if (tail == null) {
             return;
@@ -77,6 +96,11 @@ public class DoublyLinkedList {
         size--;
     }
 
+    /**
+     * Busca un elemento dado en la lista
+     * @param searchValue
+     * @return
+     */
     public boolean find(Object searchValue) {
         Node current = this.head;
         while (current != null) {
@@ -89,6 +113,9 @@ public class DoublyLinkedList {
         return false;
     }
 
+    /**
+     * Imprimne la lista elemento po elemento
+     */
     public void displayList() {
         Node current = this.head;
         while (current != null) {
@@ -96,15 +123,30 @@ public class DoublyLinkedList {
             current = current.getNext();
         }
     }
+
+    /**
+     * Retorna el elemento contenido en la posicion dada
+     * @param i
+     * @return
+     */
     public Object get_index(int i) {
         int position = 1;
         Node current = this.head;
-        if(i == 1){
+        if (i == 1) {
             return current.getData();
         }
         while (current != null && position < i) {
             current = current.next;
             position++;
-        }return current.getData();
+        }
+        return current.getData();
+    }
+
+    /**
+     * Retorna el tamaño de la lista
+     * @return
+     */
+    public int getSize() {
+        return size;
     }
 }

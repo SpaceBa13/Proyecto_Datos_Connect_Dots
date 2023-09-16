@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.mycompany.client_server.Interfaz">
+  <grid id="27dc6" binding="PanelPrin" custom-create="true" layout-manager="GridBagLayout">
+    <constraints>
+      <xy x="84" y="81" width="888" height="539"/>
+    </constraints>
+    <properties>
+      <background color="-10241906"/>
+      <enabled value="false"/>
+      <foreground color="-12617797"/>
+    </properties>
+    <border type="bevel-lowered" title="Dots and Boxes">
+      <font/>
+      <title-color color="-4473925"/>
+    </border>
+    <children>
+      <component id="d9be2" class="javax.swing.JRadioButton" binding="radioButton6" default-binding="true">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="1.0"/>
+        </constraints>
+        <properties>
+          <background color="-10241906"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="e4958" class="javax.swing.JRadioButton" binding="radioButton3" default-binding="true">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="1.0"/>
+        </constraints>
+        <properties>
+          <background color="-10241906"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="8ecc4" class="javax.swing.JRadioButton" binding="radioButton7" default-binding="true">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="1.0"/>
+        </constraints>
+        <properties>
+          <background color="-10241906"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="7317d" class="javax.swing.JRadioButton" binding="radioButton8" default-binding="true">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="1.0"/>
+        </constraints>
+        <properties>
+          <background color="-10241906"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="b14e6" class="javax.swing.JRadioButton" binding="radioButton2" default-binding="true">
+        <constraints>
+          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="1.0"/>
+        </constraints>
+        <properties>
+          <background color="-10241906"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="ffc7c" class="javax.swing.JRadioButton" binding="radioButton4" default-binding="true">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="1.0"/>
+        </constraints>
+        <properties>
+          <background color="-10241906"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="77bf1" class="javax.swing.JRadioButton" binding="radioButton5" default-binding="true">
+        <constraints>
+          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="1.0"/>
+        </constraints>
+        <properties>
+          <background color="-10241906"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="471a0" class="javax.swing.JRadioButton" binding="radioButton1" default-binding="true">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="1.0"/>
+        </constraints>
+        <properties>
+          <background color="-10241906"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="e9885" class="javax.swing.JRadioButton" binding="radioButton9" default-binding="true">
+        <constraints>
+          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="1.0"/>
+        </constraints>
+        <properties>
+          <background color="-10241906"/>
+          <text value=""/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>
