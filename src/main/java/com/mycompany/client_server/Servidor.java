@@ -150,12 +150,17 @@ public class Servidor implements Runnable {
                 lista_clientes.displayList();
                 System.out.println("Lista de clientes conectados en cola: ");
                 cola_clientes.Display();
-                enviar_cliente_atras();
-                System.out.println("Lista de clientes conectados en cola: ");
-                cola_clientes.Display();
                 //Reenvio de Datos almacenados en el servidor hacia los clientes
 
-                Reenvio(IP, paquete_recibido);
+                if(lista_clientes.size >= 1){
+                    if(puerto_destino == (int) cola_clientes.peek()){
+                        Reenvio(IP, paquete_recibido);
+                        enviar_cliente_atras();
+                    }else{
+                        System.out.println("No es tu turno");
+                    }
+                }
+
 
                 socket.close();
 
