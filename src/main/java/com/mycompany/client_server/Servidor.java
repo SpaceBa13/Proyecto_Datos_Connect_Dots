@@ -60,7 +60,7 @@ public class Servidor implements Runnable{
         Servidor server = new Servidor(10000);
         Thread hilo_servidor = new Thread(server);
         hilo_servidor.start();
-        System.out.println("En espera....");
+        System.out.println("En espera.....");
     }
      int puerto;
 
