@@ -1,8 +1,8 @@
 package com.mycompany.client_server;
 
 public class DoublyLinkedList {
-    Node head;
-    Node tail;
+    Nodo head;
+    Nodo tail;
     int size;
 
     /**
@@ -19,7 +19,7 @@ public class DoublyLinkedList {
      * @param data
      */
     public void addFirst(Object data) {
-        Node temp = new Node(data);
+        Nodo temp = new Nodo(data);
         if (head == null) {
             head = temp;
             tail = temp;
@@ -38,7 +38,7 @@ public class DoublyLinkedList {
      * @param data
      */
     public void addLast(Object data) {
-        Node temp = new Node(data);
+        Nodo temp = new Nodo(data);
         if (tail == null) {
             head = temp;
             tail = temp;
@@ -66,7 +66,7 @@ public class DoublyLinkedList {
             size--;
             return null;
         }
-        Node temp = head;
+        Nodo temp = head;
         head = head.next;
         head.prev = null;
         temp.next = null;
@@ -89,7 +89,7 @@ public class DoublyLinkedList {
             return;
         }
 
-        Node temp = tail;
+        Nodo temp = tail;
         tail = tail.prev;
         tail.next = null;
         temp.prev = null;
@@ -102,7 +102,7 @@ public class DoublyLinkedList {
      * @return
      */
     public boolean find(Object searchValue) {
-        Node current = this.head;
+        Nodo current = this.head;
         while (current != null) {
             if (current.getData().equals(searchValue)) {
                 return true;
@@ -117,7 +117,7 @@ public class DoublyLinkedList {
      * Imprimne la lista elemento po elemento
      */
     public void displayList() {
-        Node current = this.head;
+        Nodo current = this.head;
         while (current != null) {
             System.out.println(current.getData());
             current = current.getNext();
@@ -131,7 +131,7 @@ public class DoublyLinkedList {
      */
     public Object get_index(int i) {
         int position = 1;
-        Node current = this.head;
+        Nodo current = this.head;
         if (i == 1) {
             return current.getData();
         }

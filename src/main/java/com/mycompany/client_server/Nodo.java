@@ -1,15 +1,15 @@
 package com.mycompany.client_server;
 
-public class Node {
+public class Nodo {
     Object data;
-    Node prev;
-    Node next;
+    Nodo prev;
+    Nodo next;
 
     /**
      * Constructor
      * @param data
      */
-    public Node(Object data) {
+    public Nodo(Object data) {
         this.data = data;
         this.prev = null;
         this.next = null;
@@ -27,7 +27,7 @@ public class Node {
      * Obtiene el siguiente elemento mediante el puntero next
      * @return
      */
-    public Node getNext() {
+    public Nodo getNext() {
         return this.next;
     }
 
