@@ -6,6 +6,10 @@ package com.mycompany.client_server;
 * protected: lo mismo que default pero se puede heredar los atributos y asi por herencia con extends
  */
 
+import com.mycompany.client_server.*;
+import com.mycompany.client_server.Point;
+import com.mycompany.client_server.TimeUtilities;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -16,7 +20,11 @@ public class Main
 
     public static void main(String[] args)
     {
-        Game g = new Game(3,4);
+        int m = 10;
+        int n = 10;
+        int tiempoDeEspera = 75;
+
+        Game g = new Game(m,n);
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
@@ -26,6 +34,7 @@ public class Main
                 g.play(new Point(j,i), new Point(j+1,i));
                 g.showMatrices(j+3*i);
                 System.out.println();
+
             }
         }
         for (int i = 0; i < 2; i++)
@@ -46,12 +55,60 @@ public class Main
 
         JPanelDrawLines jPanel = new JPanelDrawLines();
         jPanel.setBackground(Color.BLACK);
-        jPanel.setPreferredSize(new Dimension(960, 640));
+
+        int panelWidth = 960;
+        int panelHeight = 640;
+        jPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
 
         window.add(jPanel);
         window.pack();
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+
+        LinkedList<Line> Lineas = new LinkedList<>();
+        jPanel.drawnLines = Lineas;
+        for (int i = 0; i < m-1; i++) // m-1
+        {
+            for (int j = 0; j < n; j++) // n
+            {
+                Line l = new Line(new Point(j,i), true, m,n);
+                Lineas.append(l);
+
+                TimeUtilities.waitMilliseconds(tiempoDeEspera);
+
+                jPanel.repaint();
+            }
+        }
+
+//        jPanel.drawnLines = Lineas;
+
+        for (int i = 0; i < m; i++) // m
+        {
+            for (int j = 0; j < n-1; j++) // n-1
+            {
+                Line l = new Line(new Point(j,i), false, m,n);
+                Lineas.append(l);
+
+                TimeUtilities.waitMilliseconds(tiempoDeEspera);
+
+                jPanel.repaint();
+            }
+        }
+//
+//        LinkedList<Line> Lineas = new LinkedList<>();
+//        for (int i = 0; i < 4; i++)
+//        {
+//            Line l = new Line(new Point(i,i), false, 5,6);
+//            Lineas.append(l);
+//        }
+//        jPanel.drawnLines = Lineas;
+//
+//        for (int i = 0; i < 4; i++)
+//        {
+//            Line l = new Line(new Point(i,i), true, 5,6);
+//            Lineas.append(l);
+//        }
+
 
     }
 }

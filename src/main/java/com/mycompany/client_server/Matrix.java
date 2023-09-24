@@ -1,4 +1,5 @@
 package com.mycompany.client_server;
+
 public class Matrix
 {
     LinkedList<LinkedList<Boolean>> M = new LinkedList<>();

@@ -1,4 +1,5 @@
 package com.mycompany.client_server;
+
 public class Node<T>
 {
     T data;
