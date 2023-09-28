@@ -1,5 +1,4 @@
 package com.mycompany.client_server;
-
 // Es un par ordenado (x,y)
 public class Point
 {

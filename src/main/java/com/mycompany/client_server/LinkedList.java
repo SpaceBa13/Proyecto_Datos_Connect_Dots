@@ -1,5 +1,4 @@
 package com.mycompany.client_server;
-
 public class LinkedList<T>
 {
     Node<T> first;

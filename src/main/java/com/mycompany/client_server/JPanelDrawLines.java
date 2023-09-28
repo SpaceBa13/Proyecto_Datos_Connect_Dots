@@ -21,7 +21,9 @@ public class JPanelDrawLines extends JPanel implements ActionListener
     int n;
     double t = 0.0;
     public LinkedList<Line> drawnLines = new LinkedList<>();
+    // Los dots resaltados. Se modifica en Game g.
     public LinkedList<Point> selectedDots = new LinkedList<>();
+    // Los dots dados clic. Se modifica en JPanel jPanel a traves de los botones.
     public LinkedList<Point> clickedButtons = new LinkedList<>();
 
     public JPanelDrawLines(int m, int n)
@@ -45,7 +47,7 @@ public class JPanelDrawLines extends JPanel implements ActionListener
 
                 Dimension d;
                 d = this.getPreferredSize();
-                JButton b = new JButton("BOTON NO TIENE TEXTO.");
+                JButton b = new JButton("");
                 b.setBounds(d.width * (j+1) / (n+1) - 4, d.height * (i+1) / (m+1) - 4, 16, 16);
                 b.addActionListener(new ActionListener() {
                     @Override
@@ -55,6 +57,9 @@ public class JPanelDrawLines extends JPanel implements ActionListener
 
                     }
                 });
+//                b.setVisible(false);
+                b.setOpaque(false);
+                b.setContentAreaFilled(false);
                 this.add(b);
             }
         }
@@ -93,14 +98,7 @@ public class JPanelDrawLines extends JPanel implements ActionListener
 
         if (drawDots)   // No hay condicion de finalizacion.
         {
-            int R = (int)Math.round(Math.sin(t + 4) * 64.0 + 191.0);
-            int G = (int)Math.round(Math.sin(t + 2) * 64.0 + 191.0);
-            int B = (int)Math.round(Math.sin(t) * 64.0 + 191.0);
 
-            System.out.println("R ES: " + R);
-            g2.setColor(new Color(R, G, B));
-
-            t += 0.1;
             for (int i = 0; i < m; i++)
             {
                 for (int j = 0; j < n; j++)
@@ -117,12 +115,20 @@ public class JPanelDrawLines extends JPanel implements ActionListener
         int lenSelectedDots = selectedDots.getSize();
         if (lenSelectedDots > 0)
         {
+            int R = (int)Math.round(Math.sin(t + 4) * 64.0 + 191.0);
+            int G = (int)Math.round(Math.sin(t + 2) * 64.0 + 191.0);
+            int B = (int)Math.round(Math.sin(t) * 64.0 + 191.0);
+
+            System.out.println("R ES: " + R);
+            g2.setColor(new Color(R, G, B));
+
+            t += 0.1;
             for (int i = 0; i < lenSelectedDots; i++)
             {
                 Dimension d;
                 d = this.getPreferredSize();
                 Point selectedDot = selectedDots.getAt(i);
-                g2.fillRect(d.width * (selectedDot.x + 1) / (n+1) - 8, d.height * (selectedDot.y +1) / (m+1) - 8, 24, 24);
+                g2.fillRect(d.width * (selectedDot.x + 1) / (n+1) - 8, d.height * (selectedDot.y + 1) / (m+1) - 8, 24, 24);
             }
         }
 

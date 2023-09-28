@@ -1,10 +1,11 @@
-package com.mycompany.client_server;
+
 /*
 * default (nada): solo en el paquete
 * public: todos incluso fuera del paquete
 * private: solo la clase
 * protected: lo mismo que default pero se puede heredar los atributos y asi por herencia con extends
  */
+package com.mycompany.client_server;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,7 +70,7 @@ public class Main
 
 
 
-        Game g = new Game(m,n, jPanel);
+        Game g = new Game(m,n, jPanel, 0);
 //        g.play(new Point(1,1), new Point(2,1));
 //        g.showMatrices(1);
 //        System.out.println();

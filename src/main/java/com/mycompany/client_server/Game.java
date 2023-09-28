@@ -1,14 +1,23 @@
 package com.mycompany.client_server;
 
+import java.awt.*;
+
 public class Game
 {
     public int gameState = 0;
+    public boolean turn = true;
     public int score = 0;
+    public int playerID;
     public int m,n;
     public Matrix nodeMatrix, horizontalLineMatrix, verticalLineMatrix, squareMatrix;
     public JPanelDrawLines jPanel;
 
-    public Game(int m,int n, JPanelDrawLines jPanel)
+    // sentPlays es el mensaje que se enviara al servidor y
+    //siendo recibido por todos los clientes (remitente inclusive) se concatena a receivedPlays.
+    public LinkedList<Play> sentPlays = new LinkedList<>();
+    public LinkedList<Play> receivedPlays = new LinkedList<>();
+
+    public Game(int m, int n, JPanelDrawLines jPanel, int playerID)
     {
         this.m = m;
         this.n = n;
@@ -17,6 +26,7 @@ public class Game
         verticalLineMatrix = new Matrix(m-1,n);
         squareMatrix = new Matrix(m-1,n-1);
         this.jPanel = jPanel;
+        this.playerID = playerID;
 
 
         while (true){gameStates();}
@@ -28,24 +38,47 @@ public class Game
     // Define estados de juego que varian segun gameState y avanzan de uno a otro cuando se leen ciertas variables.
     public void gameStates()
     {
-        System.out.println("ENTRO A gameStates");
+        System.out.println("Entro a gameStates");
         Point clickedDot1 = new Point();
-        Point clickedDot2 = new Point(0,0);
-        while(gameState == 0)
-        {
-            System.out.println("ENTRO A while 0");
+        Point clickedDot2 = new Point();
 
-            if (jPanel.clickedButtons.getSize() != 0)
+        while(gameState == 0)   // Replay de las jugadas de los otros jugadores.
+        {
+            if (turn)
+            {
+                while (receivedPlays.getSize() > 0)
+                {
+                    Play replay = receivedPlays.getAt(0);
+                    if (replay.playerID != playerID)
+                    {
+                        play(replay.dot1, replay.dot2);
+                    }
+                    receivedPlays.deleteFirst();
+                    // TimeUtilities.waitMilliseconds(250);
+                }
+                gameState ++;
+//                turn = false;
+            }
+        }
+
+        while(gameState == 1)   // Espera el primer clic de punto de la matriz.
+        {
+
+
+            if (jPanel.clickedButtons.getSize() > 0)
             {
                 clickedDot1 = jPanel.clickedButtons.getAt(0);
                 jPanel.selectedDots.append(clickedDot1);
                 jPanel.repaint();
                 gameState ++;
             }
+            else {System.out.print("");}
         }
-        while(gameState == 1)
+
+        while(gameState == 2)   // Espera el segundo clic de punto de la matriz.
+                                //Si se completa un cuadrado, da puntos y vuelve a etapa 1.
         {
-//            System.out.println("ENTRO A while 1");
+//            System.out.println("ENTRO A while 2");
 
             if (jPanel.clickedButtons.getSize() == 2)
             {
@@ -65,23 +98,25 @@ public class Game
                 {
 
                     jPanel.selectedDots.append(clickedDot2);
-                    jPanel.repaint();   // repaint se ejecuta dentro de play.
+                    jPanel.repaint();   // repaint ya se ejecuta dentro de play.
                     // Se copian los puntos porque play es destructivo, pero jPanel necesita esos puntos.
                     Point clickedDot1Copy = new Point(clickedDot1X, clickedDot1Y);
                     Point clickedDot2Copy = new Point(clickedDot2X, clickedDot2Y);
 
-                    if (play(clickedDot1Copy, clickedDot2Copy).getSize() > 0)
+                    sentPlays.append(new Play(playerID, new Point(clickedDot1X, clickedDot1Y), new Point(clickedDot2X, clickedDot2Y)));
+                    int scoreToAdd = play(clickedDot1Copy, clickedDot2Copy).getSize();
+                    System.out.println("Gano " + scoreToAdd + " p");
+                    if (scoreToAdd > 0)
                     {
-                        gameState = 0;
+                        score += scoreToAdd;
+                        gameState = 1;
 
                         jPanel.clickedButtons.deleteFirst();
                         jPanel.clickedButtons.deleteFirst();
                     }
                     else
                     {
-//                        gameState ++;
                         gameState = 0;
-
 
                         while (jPanel.selectedDots.getSize() > 0)
                         {
@@ -90,7 +125,6 @@ public class Game
 
                         jPanel.clickedButtons.deleteFirst();
                         jPanel.clickedButtons.deleteFirst();
-
                     }
                 }
                 else
@@ -135,6 +169,17 @@ public class Game
         }
     }
 
+    public void drawSquareLabel(Point dot)
+    {
+        Label completedBy = new Label(String.valueOf(playerID));
+        Dimension d;
+        d = this.jPanel.getPreferredSize();
+        completedBy.setBounds(d.width * (dot.x*2 + 3) / (n+1) / 2 - 8, d.height * (dot.y*2 + 3) / (m+1) / 2 - 8, 24, 24);
+        Font font = new Font("Times New Roman", Font.BOLD, 32); // fuente?
+        completedBy.setFont(font);
+        this.jPanel.add(completedBy);
+    }
+
     // Determina si los dots indicados forman una linea vertical u horizontal o son invalidos.
     public char connectionType(Point dot1, Point dot2)
     {
@@ -164,6 +209,7 @@ public class Game
             {
                 squareMatrix.setAt(dot1, true); // La linea horizontal es el lado superior de un nuevo cuadrado segun el if.
                 newSquares.append(dot1);
+                drawSquareLabel(dot1);
             }
             // comprueba si se completa un cuadrado con la nueva linea como lado inferior.
             dotAux.y -= 2;  // dotAux es arriba; dot2, arriba y a la derecha.
@@ -172,6 +218,7 @@ public class Game
             {
                 squareMatrix.setAt(dotAux, true); // La linea horizontal es el lado inferior de un nuevo cuadrado segun el if.
                 newSquares.append(dotAux);
+                drawSquareLabel(dotAux);
             }
         }
         // v o V es vertical.
@@ -185,6 +232,7 @@ public class Game
             {
                 squareMatrix.setAt(dot1, true); // La linea vertical es el lado izquierdo de un nuevo cuadrado segun el if.
                 newSquares.append(dot1);
+                drawSquareLabel(dot1);
             }
             // comprueba si se completa un cuadrado con la nueva linea como lado derecho.
             dotAux.x -= 2;  // dot1 es la posicion actual; dotAux, izquierda; dot2, abajo y a la izquierda.
@@ -193,11 +241,14 @@ public class Game
             {
                 squareMatrix.setAt(dotAux, true); // La linea horizontal es el lado inferior de un nuevo cuadrado segun el if.
                 newSquares.append(dotAux);
+                drawSquareLabel(dotAux);
             }
         }
         return newSquares;
     }
-    // Devuelve una LinkedList con las posiciones de los cuadrados creados en la squareMatrix.
+    // Devuelve una LinkedList con las posiciones de los cuadrados creados en la squareMatrix. Los puntos dot1 y 2 son
+    //los que une la nueva linea y replay indica si es una jugada por parte del usuario o si se esta usando
+    //automaticamente la funcion con los datos de receivedPlays.
     public LinkedList<Point> play(Point dot1, Point dot2)
     {
         LinkedList<Point> newSquares = new LinkedList<>();
