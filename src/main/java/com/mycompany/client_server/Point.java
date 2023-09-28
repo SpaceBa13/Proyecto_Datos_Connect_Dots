@@ -1,7 +1,10 @@
 package com.mycompany.client_server;
+
+// Es un par ordenado (x,y)
 public class Point
 {
     public int x,y;
+    public Point(){}
 
     public Point(int x, int y)
     {

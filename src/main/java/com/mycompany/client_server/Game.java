@@ -1,10 +1,14 @@
 package com.mycompany.client_server;
+
 public class Game
 {
+    public int gameState = 0;
+    public int score = 0;
     public int m,n;
     public Matrix nodeMatrix, horizontalLineMatrix, verticalLineMatrix, squareMatrix;
+    public JPanelDrawLines jPanel;
 
-    public Game(int m,int n)
+    public Game(int m,int n, JPanelDrawLines jPanel)
     {
         this.m = m;
         this.n = n;
@@ -12,6 +16,123 @@ public class Game
         horizontalLineMatrix = new Matrix(m,n-1);
         verticalLineMatrix = new Matrix(m-1,n);
         squareMatrix = new Matrix(m-1,n-1);
+        this.jPanel = jPanel;
+
+
+        while (true){gameStates();}
+    }
+
+
+
+
+    // Define estados de juego que varian segun gameState y avanzan de uno a otro cuando se leen ciertas variables.
+    public void gameStates()
+    {
+        System.out.println("ENTRO A gameStates");
+        Point clickedDot1 = new Point();
+        Point clickedDot2 = new Point(0,0);
+        while(gameState == 0)
+        {
+            System.out.println("ENTRO A while 0");
+
+            if (jPanel.clickedButtons.getSize() != 0)
+            {
+                clickedDot1 = jPanel.clickedButtons.getAt(0);
+                jPanel.selectedDots.append(clickedDot1);
+                jPanel.repaint();
+                gameState ++;
+            }
+        }
+        while(gameState == 1)
+        {
+//            System.out.println("ENTRO A while 1");
+
+            if (jPanel.clickedButtons.getSize() == 2)
+            {
+                clickedDot2 = jPanel.clickedButtons.getAt(1);
+
+                int clickedDot1X = clickedDot1.x;
+                int clickedDot1Y = clickedDot1.y;
+                int clickedDot2X = clickedDot2.x;
+                int clickedDot2Y = clickedDot2.y;
+
+                int distanceX = clickedDot2X - clickedDot1X;
+                int distanceY = clickedDot2Y - clickedDot1Y;
+
+                int distance = distanceX*distanceX + distanceY*distanceY;
+
+                if (distance == 1)
+                {
+
+                    jPanel.selectedDots.append(clickedDot2);
+                    jPanel.repaint();   // repaint se ejecuta dentro de play.
+                    // Se copian los puntos porque play es destructivo, pero jPanel necesita esos puntos.
+                    Point clickedDot1Copy = new Point(clickedDot1X, clickedDot1Y);
+                    Point clickedDot2Copy = new Point(clickedDot2X, clickedDot2Y);
+
+                    if (play(clickedDot1Copy, clickedDot2Copy).getSize() > 0)
+                    {
+                        gameState = 0;
+
+                        jPanel.clickedButtons.deleteFirst();
+                        jPanel.clickedButtons.deleteFirst();
+                    }
+                    else
+                    {
+//                        gameState ++;
+                        gameState = 0;
+
+
+                        while (jPanel.selectedDots.getSize() > 0)
+                        {
+                            jPanel.selectedDots.deleteFirst();  // se borra justo despues de crearse el selected dot y no es apreciable.
+                        }
+
+                        jPanel.clickedButtons.deleteFirst();
+                        jPanel.clickedButtons.deleteFirst();
+
+                    }
+                }
+                else
+                {
+                    jPanel.clickedButtons.deleteLast();
+                    System.out.println("Error: los puntos no son adyacentes");
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    // Inserta una linea en una de las matrices de lineas horizontalLineMatrix o verticalLineMatrix
+    //y anadiendo la linea a la lista de lineas drawnLines de jPanel la dibuja en pantalla.
+
+    // En las matrices de lineas horizontalLineMatrix o verticalLineMatrix la linea se guarda como un booleano
+    //en la coordenada indicada por Point dot.
+    // En la lista de lineas drawnLines de JPanel se guardan objetos de la clase Line.
+    public void insertAndDrawLines(Point dot, boolean isVertical, int m, int n)
+    {
+        if (isVertical)
+        {
+            verticalLineMatrix.setAt(dot, true);
+            jPanel.drawnLines.append(new Line(dot, true, m, n));
+            jPanel.repaint();
+        }
+        else
+        {
+            horizontalLineMatrix.setAt(dot, true);
+            jPanel.drawnLines.append(new Line(dot, false, m, n));
+            jPanel.repaint();
+        }
     }
 
     // Determina si los dots indicados forman una linea vertical u horizontal o son invalidos.
@@ -35,7 +156,7 @@ public class Game
         // h o H es horizontal.
         if (connection == 'h' || connection == 'H')
         {
-            horizontalLineMatrix.setAt(dot1, true);
+            insertAndDrawLines(dot1, false, m, n);
             // comprueba si se completa un cuadrado con la nueva linea como lado superior.
             Point dotAux = new Point(dot1.x, dot1.y);
             dotAux.y += 1;  // dotAux es abajo; dot2, a la derecha.
@@ -56,7 +177,7 @@ public class Game
         // v o V es vertical.
         if (connection == 'v' || connection == 'V')
         {
-            verticalLineMatrix.setAt(dot1, true);
+            insertAndDrawLines(dot1, true, m, n);
             // comprueba si se completa un cuadrado con la nueva linea como lado izquierdo.
             Point dotAux = new Point(dot1.x, dot1.y);
             dotAux.x += 1;  // dot1 es la posicion actual; dotAux, a la derecha; dot2, abajo.
@@ -81,7 +202,7 @@ public class Game
     {
         LinkedList<Point> newSquares = new LinkedList<>();
 
-        //Determina tipo de linea..
+        //Determina tipo de linea.
         char connection = connectionType(dot1, dot2);
         switch(connection)
         {

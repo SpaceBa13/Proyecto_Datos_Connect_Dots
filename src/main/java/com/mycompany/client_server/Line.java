@@ -1,5 +1,9 @@
 package com.mycompany.client_server;
 
+// Calcula como dibujar un linea en pantalla a partir de la coordenada de esta en
+//las matrices de lineas horizontalLineMatrix o verticalLineMatrix, si es horizontal o vertical y las dimensiones (mxn) de
+//matriz de puntos del juego.
+// Calcula el largo de un rectangulo delgado y la posicion en que se dibuja. JPanelDrawLines dibuja los rectangulos que se le den
 public class Line
 {
     public int x, y, width, height, m, n;
@@ -29,7 +33,4 @@ public class Line
             this.y = 100000 / (m+1) * (y+1);
         }
     }
-
-
-
 }
