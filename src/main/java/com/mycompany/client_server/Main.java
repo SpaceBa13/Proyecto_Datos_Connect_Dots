@@ -17,8 +17,8 @@ public class Main
 
     public static void main(String[] args)
     {
-        int m = 6;
-        int n = 9;
+        int m = 4;
+        int n = 4;
         int lineCount = 2*m*n - m - n;
         int tiempoDeEspera = 2500 / lineCount;
 
