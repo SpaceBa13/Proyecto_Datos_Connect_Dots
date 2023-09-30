@@ -1,5 +1,6 @@
 package com.mycompany.client_server;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.awt.*;
 import java.util.Random;
 
@@ -59,7 +60,36 @@ public class Game
         hilo_cliente.start();
 
 
-        while (true){gameStates();}
+        while (gameState < 4){gameStates();}
+        System.out.println("FIN DEL JUEGO FIN DEL JUEGO FIN DEL JUEGO FIN DEL JUEGO FIN DEL JUEGO FIN DEL JUEGO.");
+        TimeUtilities.waitMilliseconds(5000);
+        System.out.println("FIN DEL JUEGO FIN DEL JUEGO FIN DEL JUEGO FIN DEL JUEGO FIN DEL JUEGO FIN DEL JUEGO.");
+
+    }
+
+    public boolean matrixIsComplete(Matrix matrix, int i, int j)
+    {
+//        System.out.println("En matrixIsComplete i y j son: " + i + " y " + j);
+//        System.out.println("En matrixIsComplete n y m son: " + n + " y " + m);
+        if (matrix.getAt(new Point(i, j)))
+        {
+            if (i >= n-2)       // Usa m y n de la matriz de puntos.
+            {
+                if (j >= m-2)   // Usa m y n de la matriz de puntos.
+                {
+                    return true;
+                }
+                i = 0;
+                j ++;
+            }
+            else
+            {
+                i++;
+
+            }
+            return matrixIsComplete(matrix, i, j);
+        }
+        return false;
     }
 
     public void replay(){
@@ -78,7 +108,12 @@ public class Game
 //                System.out.println("Jugador " + this.playerID + " Esta vaciando sus receivedPlays");
                 System.out.print(" replay " + this.playerID);
             }
-            gameState = 1;
+            if (matrixIsComplete(squareMatrix, 0, 0))
+            {
+                gameState = 3;
+            }
+            else {gameState = 1;}
+
         }
 
     public void actualizar_valores(Point Punto1,Point Punto2, int ID){
@@ -224,6 +259,17 @@ public class Game
 
                         jPanel.clickedButtons.deleteFirst();
                         jPanel.clickedButtons.deleteFirst();
+
+                        if (matrixIsComplete(squareMatrix,0,0))
+                        {
+                            gameState = 3;
+
+                            while (jPanel.selectedDots.getSize() > 0)
+                            {
+                                jPanel.selectedDots.deleteFirst();  // se borra justo despues de crearse el selected dot y no es apreciable.
+                            }
+                            jPanel.repaint();
+                        }
                     }
                     else
                     {
@@ -239,20 +285,20 @@ public class Game
                         jPanel.clickedButtons.deleteFirst();
 
                     }
-
-
-
-                    TimeUtilities.waitMilliseconds(500);
-//                    actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);    // Quitar esto?
+                    TimeUtilities.waitMilliseconds(300);    // Era 500.
                 }
                 else
                 {
-
                     jPanel.clickedButtons.deleteLast();
                     System.out.println("Error: los puntos no son adyacentes");
-
                 }
             }
+        }
+        if (gameState == 3)
+        {
+            Play goToNextTurn = new Play(-1, new Point(-1, -1), new Point(-1, -1), false);
+            this.cliente.send(goToNextTurn);
+            gameState = 4;
         }
     }
 
