@@ -68,7 +68,7 @@ public class Game
             while (receivedPlays.getSize() > 0)
             {
                 Play replay = receivedPlays.getAt(0);
-                if (replay.playerID == this.playerID)
+                if (replay.playerID != this.playerID)
                 {
                     System.out.println("Esta haciendo un replay.");
                     play(replay.dot1, replay.dot2, replay.playerID);
@@ -128,7 +128,9 @@ public class Game
                                 //Si se completa un cuadrado, da puntos y vuelve a etapa 1.
         {
             if (this.cliente.estado_del_mensaje){
-                actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);}
+                actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
+                TimeUtilities.waitMilliseconds(100);
+            }
 //            System.out.println("ENTRO A while 2");
 
             if (jPanel.clickedButtons.getSize() == 2)
@@ -158,7 +160,7 @@ public class Game
                     System.out.println("Jugada Enviada: " + playToSend.playerID + ", " + playToSend.dot1.x + ", " + playToSend.dot1.y );
                     System.out.println("Jugada Enviada: " + playToSend.playerID + ", " + playToSend.dot2.x + ", " + playToSend.dot2.y);
                     this.cliente.send(playToSend);
-                    TimeUtilities.waitMilliseconds(100);
+                    TimeUtilities.waitMilliseconds(500);
                     actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
 
 //
@@ -184,45 +186,15 @@ public class Game
                             jPanel.selectedDots.deleteFirst();  // se borra justo despues de crearse el selected dot y no es apreciable.
                         }
 
-
-//                        Point Punto1 = this.cliente.Punto_1;
-//                        Point Punto2 = this.cliente.Punto_2;
-//                        int ID = this.cliente.ID_jugador;
-//                        Play jugada_recibida = new Play(ID, Punto1, Punto2);
-//                        Play jugada_recibida = this.cliente.mensaje;
-//                        receivedPlays.append(jugada_recibida);
-//                        replay();
-
                         jPanel.clickedButtons.deleteFirst();
                         jPanel.clickedButtons.deleteFirst();
-
-
-
-
-
-//                        while (true)
-//                        {
-//                            if(cliente == null){
-//                                System.out.println("Error Desaparecio el Cliente");
-//                            }
-//                            if (cliente.estado_del_mensaje)
-//                            {
-//
-//                                receivedPlays.append(cliente.mensaje);
-//                                System.out.println("El cliente recibio respuesta");
-//                                System.out.println(cliente.mensaje);
-//                                break;
-//                            }else{
-////                                System.out.println("no hubo respuesta");
-//                            }
-//                        }
-//                        System.out.println("Salio del while");
 
                     }
 
                 }
                 else
                 {
+
                     jPanel.clickedButtons.deleteLast();
                     System.out.println("Error: los puntos no son adyacentes");
 
@@ -230,17 +202,6 @@ public class Game
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
 
     // Inserta una linea en una de las matrices de lineas horizontalLineMatrix o verticalLineMatrix
     //y anadiendo la linea a la lista de lineas drawnLines de jPanel la dibuja en pantalla.

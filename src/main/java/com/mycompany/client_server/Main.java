@@ -30,7 +30,7 @@ public class Main
         window.setTitle("Prueba de Connect the Dots");
 
         JPanelDrawLines jPanel = new JPanelDrawLines(m, n);
-        jPanel.setBackground(Color.BLACK);
+        jPanel.setBackground(Color.white);
 
         int panelWidth = 960;
         int panelHeight = 640;
@@ -52,8 +52,9 @@ public class Main
         jPanel.placeButtons();
         System.out.println("jPanel.clickedButtons.getSize() ES: " + jPanel.clickedButtons.getSize());
 
-
-        Game g = new Game(m,n, jPanel, 1);
+        Random id = new Random();
+        int ID = id.nextInt(1, 100);
+        Game g = new Game(m,n, jPanel, ID);
 
 
 //        Play jugada1 = new Play(1, new Point(1,2), new Point(1,3));
@@ -148,9 +149,12 @@ public class Main
 //        String Envio_json = mapper.writeValueAsString(jugada1);
 //        System.out.println(Envio_json);
 //        paquete_recibido = recibido_json.readValue(lectura_json, Paquete_Datos.class);
+        int fila = Integer.parseInt(JOptionPane.showInputDialog(window, "Ingrese numero de filas"));
+        int columna = Integer.parseInt(JOptionPane.showInputDialog(window, "Ingrese numero de columnas"));
+        String user = JOptionPane.showInputDialog(window, "Ingrese el nombre de usuario");
 
 
-        createGame(5, 5, "A");
+        createGame(fila, columna, user);
 
     }
 }

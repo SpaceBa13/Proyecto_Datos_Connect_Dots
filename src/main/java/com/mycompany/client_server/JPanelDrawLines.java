@@ -79,7 +79,7 @@ public class JPanelDrawLines extends JPanel implements ActionListener
     {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
-        g2.setColor(Color.white);
+        g2.setColor(Color.black);
         int lineCount = drawnLines.getSize();
         for (int i = 0; i < lineCount; i++)
         {

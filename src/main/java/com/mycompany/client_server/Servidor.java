@@ -119,7 +119,7 @@ public class Servidor implements Runnable {
         try {
             ServerSocket servidor = new ServerSocket(11111);
             String IP = "127.0.0.1";
-            String nick, comentario_recibido;
+            String nick;
             Play mensaje;
             int puerto_destino;
             Paquete_Datos paquete_recibido;
@@ -142,17 +142,14 @@ public class Servidor implements Runnable {
                 nick = paquete_recibido.getUser();
                 if(paquete_recibido.getMensaje() != null){
                 mensaje = paquete_recibido.getMensaje();}
-//                Mensaje = (LinkedList<Play>) mensaje;
 
                 puerto_destino = paquete_recibido.getPuerto();
-                comentario_recibido = paquete_recibido.getComentario();
                 agregar_cliente_lista(puerto_destino);
 
                 /*Zona de Purebas*/
                 System.out.println("Cola aqui:");
                 agregar_cliente_cola(puerto_destino);
                 System.out.println("Nickname: " + nick);
-//                System.out.println("Mensaje: " + mensaje);
                 System.out.println("Puerto del Cliente: " + puerto_destino);
                 System.out.println("Lista de clientes conectados: ");
                 lista_clientes.displayList();
