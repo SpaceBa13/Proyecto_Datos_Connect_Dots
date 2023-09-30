@@ -86,6 +86,7 @@ public class Cliente extends Observable implements Runnable{
             while(true){
                 this.estado_del_mensaje = false;
                 recibir_datos = servidor_cliente.accept();
+                this.estado_del_mensaje = true;
                 DataInputStream paquete_entrada = new DataInputStream(recibir_datos.getInputStream());
 
                 /*Json*/
@@ -104,6 +105,7 @@ public class Cliente extends Observable implements Runnable{
                 System.out.println("Nickname: " + nick);
                 System.out.println("Puerto del Cliente: " + puerto_destino);
 
+
                 this.mensaje = mensaje_recibido;
                 this.Punto_1 = mensaje_recibido.dot1;
                 this.Punto_2 = mensaje_recibido.dot2;
@@ -119,10 +121,7 @@ public class Cliente extends Observable implements Runnable{
                 System.out.println("Jugada Recibida: " + this.ID_jugador + ", " +  this.Punto_1.x + ", "+  this.Punto_1.y);
                 System.out.println("Jugada Recibida: " + this.ID_jugador + ", " + this.Punto_2.x + ", "+  this.Punto_2.y);
 
-
-
-
-                this.estado_del_mensaje = true;
+                this.estado_del_mensaje = false;
                 recibir_datos.close();
                 paquete_entrada.close();
 

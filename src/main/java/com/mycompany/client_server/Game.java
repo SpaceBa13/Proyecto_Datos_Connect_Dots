@@ -84,12 +84,13 @@ public class Game
 
         while(gameState == 0)   // Replay de las jugadas de los otros jugadores.
         {
-            if (turn)
-            {
+            if (this.cliente.estado_del_mensaje){
+                actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
+            }
                 while (receivedPlays.getSize() > 0)
                 {
                     Play replay = receivedPlays.getAt(0);
-                    if (replay.playerID != playerID)
+                    if (replay.playerID == this.playerID)
                     {
                         System.out.println("Esta haciendo un replay.");
                         play(replay.dot1, replay.dot2, replay.playerID);
@@ -99,13 +100,14 @@ public class Game
 //                     TimeUtilities.waitMilliseconds(250);
                 }
                 gameState ++;
-//                turn = false;
             }
-            System.out.println("Esta en del while de received Plays");
-        }
+
         System.out.println("Entra al while 1");
         while(gameState == 1)   // Espera el primer clic de punto de la matriz.
         {
+            if (this.cliente.estado_del_mensaje){
+                actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
+            }
 
 
             if (jPanel.clickedButtons.getSize() > 0)
@@ -121,6 +123,8 @@ public class Game
         while(gameState == 2)   // Espera el segundo clic de punto de la matriz.
                                 //Si se completa un cuadrado, da puntos y vuelve a etapa 1.
         {
+            if (this.cliente.estado_del_mensaje){
+                actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);}
 //            System.out.println("ENTRO A while 2");
 
             if (jPanel.clickedButtons.getSize() == 2)
@@ -177,17 +181,14 @@ public class Game
                         this.cliente.send(playToSend);
                         TimeUtilities.waitMilliseconds(2000);
 
-                        Point Punto1 = this.cliente.Punto_1;
-                        Point Punto2 = this.cliente.Punto_2;
-                        int ID = this.cliente.ID_jugador;
-                        Play jugada_recibida = new Play(ID, Punto1, Punto2);
-
+//                        Point Punto1 = this.cliente.Punto_1;
+//                        Point Punto2 = this.cliente.Punto_2;
+//                        int ID = this.cliente.ID_jugador;
+                        actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
+//                        Play jugada_recibida = new Play(ID, Punto1, Punto2);
 //                        Play jugada_recibida = this.cliente.mensaje;
-                        receivedPlays.append(jugada_recibida);
+//                        receivedPlays.append(jugada_recibida);
 //                        replay();
-                        System.out.println("jugada_recibida: " + jugada_recibida.playerID + ", " + jugada_recibida.dot1.x + ", " + jugada_recibida.dot1.y );
-                        System.out.println("jugada_recibida: " + jugada_recibida.playerID + ", " + jugada_recibida.dot2.x + ", " + jugada_recibida.dot2.y );
-
 
                         jPanel.clickedButtons.deleteFirst();
                         jPanel.clickedButtons.deleteFirst();
@@ -377,6 +378,16 @@ public class Game
                 return null;    //Error si los puntos dados son invalidos.
         }
         return newSquares;
+    }
+    public void actualizar_valores(Point Punto1,Point Punto2, int ID){
+        Punto1 = this.cliente.Punto_1;
+        Punto2 = this.cliente.Punto_2;
+        ID = this.cliente.ID_jugador;
+        Play jugada_recibida = new Play(ID, Punto1, Punto2);
+        receivedPlays.append(jugada_recibida);
+
+        System.out.println("jugada_recibida: " + jugada_recibida.playerID + ", " + jugada_recibida.dot1.x + ", " + jugada_recibida.dot1.y );
+        System.out.println("jugada_recibida: " + jugada_recibida.playerID + ", " + jugada_recibida.dot2.x + ", " + jugada_recibida.dot2.y );
     }
 
 
