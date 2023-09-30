@@ -34,11 +34,10 @@ public class Cliente extends Observable implements Runnable{
         this.puerto_propio = puerto_propio;
         this.user = user;
     }
-    public Cliente(String user, int puerto_propio, String comentario) {
+    public Cliente(int puerto_propio) {
         this.puerto_propio = puerto_propio;
-        this.user = user;
-        this.comentario = comentario;
     }
+
 
 
 
@@ -53,6 +52,31 @@ public class Cliente extends Observable implements Runnable{
             envio.setMensaje(mensaje);
             envio.setUser(user);
             envio.setPuerto(puerto_propio);
+            envio.setComentario(comentario);
+
+            /*Json*/
+            ObjectMapper envio_json = new ObjectMapper();
+            String Envio_json = envio_json.writeValueAsString(envio);
+
+            /*Envia el String en formato jason a traves del socket*/
+            DataOutputStream paquete_enviar = new DataOutputStream(socket.getOutputStream());
+            paquete_enviar.writeUTF(Envio_json);
+            socket.close();
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void send(int puerto){
+        String IP = "127.0.0.1";
+        try {
+            Socket socket = new Socket(IP, 11111);
+            /*Crea una instancia del objeto Paquete de Datos para setear los datos a enviar*/
+            Paquete_Datos envio = new Paquete_Datos();
+            envio.setMensaje(mensaje);
+            envio.setUser(user);
+            envio.setPuerto(puerto);
             envio.setComentario(comentario);
 
             /*Json*/

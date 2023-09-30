@@ -140,7 +140,8 @@ public class Servidor implements Runnable {
                 System.out.println(paquete_recibido.getMensaje());
                 /*Obtiene los datos del Objecto que entro por el socket*/
                 nick = paquete_recibido.getUser();
-                mensaje = paquete_recibido.getMensaje();
+                if(paquete_recibido.getMensaje() != null){
+                mensaje = paquete_recibido.getMensaje();}
 //                Mensaje = (LinkedList<Play>) mensaje;
 
                 puerto_destino = paquete_recibido.getPuerto();
@@ -151,7 +152,7 @@ public class Servidor implements Runnable {
                 System.out.println("Cola aqui:");
                 agregar_cliente_cola(puerto_destino);
                 System.out.println("Nickname: " + nick);
-                System.out.println("Mensaje: " + mensaje);
+//                System.out.println("Mensaje: " + mensaje);
                 System.out.println("Puerto del Cliente: " + puerto_destino);
                 System.out.println("Lista de clientes conectados: ");
                 lista_clientes.displayList();
@@ -167,7 +168,8 @@ public class Servidor implements Runnable {
 //                        System.out.println("No es tu turno");
 //                    }
 //                }
-                Reenvio(IP, paquete_recibido);
+                if(paquete_recibido.mensaje != null){
+                    Reenvio(IP, paquete_recibido);}
 
                 socket.close();
 

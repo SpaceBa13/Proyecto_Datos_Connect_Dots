@@ -39,6 +39,8 @@ public class Game
         this.playerID = playerID;
         Thread hilo_cliente = new Thread(cliente);
         hilo_cliente.start();
+        this.cliente.send(this.puerto_cliente);
+
 
 
         while (true){gameStates();}
@@ -63,16 +65,32 @@ public class Game
     }
 
     public void replay(){
-                while (receivedPlays.getSize() > 0)
+            while (receivedPlays.getSize() > 0)
+            {
+                Play replay = receivedPlays.getAt(0);
+                if (replay.playerID == this.playerID)
                 {
-                    Play replay = receivedPlays.getAt(0);
                     System.out.println("Esta haciendo un replay.");
                     play(replay.dot1, replay.dot2, replay.playerID);
-                    receivedPlays.deleteFirst();
-                    System.out.println("Esta en el if del while de received Plays");
-//                     TimeUtilities.waitMilliseconds(250);
                 }
+                receivedPlays.deleteFirst();
+                System.out.println("Esta en el if del while de received Plays");
+//                     TimeUtilities.waitMilliseconds(250);
+            }
+            gameState = 1;
         }
+
+    public void actualizar_valores(Point Punto1,Point Punto2, int ID){
+        Punto1 = this.cliente.Punto_1;
+        Punto2 = this.cliente.Punto_2;
+        ID = this.cliente.ID_jugador;
+        Play jugada_recibida = new Play(ID, Punto1, Punto2);
+        receivedPlays.append(jugada_recibida);
+        replay();
+
+        System.out.println("jugada_recibida: " + jugada_recibida.playerID + ", " + jugada_recibida.dot1.x + ", " + jugada_recibida.dot1.y );
+        System.out.println("jugada_recibida: " + jugada_recibida.playerID + ", " + jugada_recibida.dot2.x + ", " + jugada_recibida.dot2.y );
+    }
 
 
     // Define estados de juego que varian segun gameState y avanzan de uno a otro cuando se leen ciertas variables.
@@ -84,9 +102,6 @@ public class Game
 
         while(gameState == 0)   // Replay de las jugadas de los otros jugadores.
         {
-            if (this.cliente.estado_del_mensaje){
-                actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
-            }
                 while (receivedPlays.getSize() > 0)
                 {
                     Play replay = receivedPlays.getAt(0);
@@ -94,19 +109,23 @@ public class Game
                     {
                         System.out.println("Esta haciendo un replay.");
                         play(replay.dot1, replay.dot2, replay.playerID);
+                        System.out.println("dentro de replay" + gameState);
                     }
                     receivedPlays.deleteFirst();
                     System.out.println("Esta en el if del while de received Plays");
 //                     TimeUtilities.waitMilliseconds(250);
                 }
-                gameState ++;
+                gameState = 1;
             }
 
-        System.out.println("Entra al while 1");
+        System.out.println("Entra al while 1" + gameState);
         while(gameState == 1)   // Espera el primer clic de punto de la matriz.
         {
             if (this.cliente.estado_del_mensaje){
-                actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
+                if(this.cliente.mensaje != null){
+                    actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
+                }
+
             }
 
 
@@ -115,7 +134,7 @@ public class Game
                 clickedDot1 = jPanel.clickedButtons.getAt(0);
                 jPanel.selectedDots.append(clickedDot1);
                 jPanel.repaint();
-                gameState ++;
+                gameState = 2;
             }
             else {System.out.print("");}
         }
@@ -159,6 +178,10 @@ public class Game
                         score += scoreToAdd;
 
                         Play playToSend = new Play(playerID, new Point(clickedDot1X, clickedDot1Y), new Point(clickedDot2X, clickedDot2Y));
+                        this.cliente.send(playToSend);
+                        TimeUtilities.waitMilliseconds(1000);
+                        actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
+
 
                         gameState = 1;
 
@@ -179,7 +202,7 @@ public class Game
                         System.out.println("Jugada Enviada: " + playToSend.playerID + ", " + playToSend.dot2.x + ", " + playToSend.dot2.y);
 
                         this.cliente.send(playToSend);
-                        TimeUtilities.waitMilliseconds(2000);
+                        TimeUtilities.waitMilliseconds(1000);
 
 //                        Point Punto1 = this.cliente.Punto_1;
 //                        Point Punto2 = this.cliente.Punto_2;
@@ -379,16 +402,7 @@ public class Game
         }
         return newSquares;
     }
-    public void actualizar_valores(Point Punto1,Point Punto2, int ID){
-        Punto1 = this.cliente.Punto_1;
-        Punto2 = this.cliente.Punto_2;
-        ID = this.cliente.ID_jugador;
-        Play jugada_recibida = new Play(ID, Punto1, Punto2);
-        receivedPlays.append(jugada_recibida);
 
-        System.out.println("jugada_recibida: " + jugada_recibida.playerID + ", " + jugada_recibida.dot1.x + ", " + jugada_recibida.dot1.y );
-        System.out.println("jugada_recibida: " + jugada_recibida.playerID + ", " + jugada_recibida.dot2.x + ", " + jugada_recibida.dot2.y );
-    }
 
 
     //Debug methods
