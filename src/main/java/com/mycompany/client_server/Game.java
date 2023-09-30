@@ -20,8 +20,6 @@ public class Game
     Cliente cliente = new Cliente( "a", puerto_cliente);
 
 
-
-
     // sentPlays es el mensaje que se enviara al servidor y
     //siendo recibido por todos los clientes (remitente inclusive) se concatena a receivedPlays.
     public LinkedList<Play> sentPlays = new LinkedList<>();
@@ -72,10 +70,11 @@ public class Game
                 {
                     System.out.println("Esta haciendo un replay.");
                     play(replay.dot1, replay.dot2, replay.playerID);
+                    receivedPlays.deleteFirst();
+                }else{
+                    receivedPlays.deleteFirst();
                 }
-                receivedPlays.deleteFirst();
                 System.out.println("Esta en el if del while de received Plays");
-//                     TimeUtilities.waitMilliseconds(250);
             }
             gameState = 1;
         }
@@ -86,10 +85,11 @@ public class Game
         ID = this.cliente.ID_jugador;
         Play jugada_recibida = new Play(ID, Punto1, Punto2);
         receivedPlays.append(jugada_recibida);
+
+//        System.out.println("jugada_recibida: " + jugada_recibida.playerID + ", " + jugada_recibida.dot1.x + ", " + jugada_recibida.dot1.y );
+//        System.out.println("jugada_recibida: " + jugada_recibida.playerID + ", " + jugada_recibida.dot2.x + ", " + jugada_recibida.dot2.y );
         replay();
 
-        System.out.println("jugada_recibida: " + jugada_recibida.playerID + ", " + jugada_recibida.dot1.x + ", " + jugada_recibida.dot1.y );
-        System.out.println("jugada_recibida: " + jugada_recibida.playerID + ", " + jugada_recibida.dot2.x + ", " + jugada_recibida.dot2.y );
     }
 
 
@@ -129,7 +129,6 @@ public class Game
         {
             if (this.cliente.estado_del_mensaje){
                 actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
-                TimeUtilities.waitMilliseconds(100);
             }
 //            System.out.println("ENTRO A while 2");
 
