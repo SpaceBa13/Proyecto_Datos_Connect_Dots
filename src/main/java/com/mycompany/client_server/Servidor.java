@@ -155,6 +155,7 @@ public class Servidor implements Runnable {
                 lista_clientes.displayList();
                 System.out.println("Lista de clientes conectados en cola: ");
                 cola_clientes.Display();
+//                System.out.println("Su mensaje cuando un cliente se anade a la cola es: " + paquete_recibido.getMensaje());
                 //Reenvio de Datos almacenados en el servidor hacia los clientes
 
 //                if(lista_clientes.size >= 1){
@@ -166,7 +167,29 @@ public class Servidor implements Runnable {
 //                    }
 //                }
                 if(paquete_recibido.mensaje != null){
-                    Reenvio(IP, paquete_recibido);}
+                    if (! paquete_recibido.mensaje.completedSquare){enviar_cliente_atras();}
+                    paquete_recibido.setPuerto_para_turno((int) cola_clientes.peek());  // Cast a entero --> (int) cola_clientes.peek()
+
+                    Reenvio(IP, paquete_recibido);
+                }
+                else
+                {
+                    System.out.println("EN EL ELSE DESDE EL SERVIDOR PAQUETE DICE QUE");
+                    System.out.println("paquete_recibido.mensaje: " + paquete_recibido.mensaje);
+                    System.out.println("paquete_recibido.getPuerto(): " + paquete_recibido.getPuerto());
+                    System.out.println("paquete_recibido.getPuerto_para_turno(): " + paquete_recibido.getPuerto_para_turno());
+                    System.out.println("paquete_recibido.getUser(): " + paquete_recibido.getUser());
+                    System.out.println("paquete_recibido.getComentario(): " + paquete_recibido.getComentario());
+
+                    // El nuevo en entrar a la cola es el del turno.
+                    paquete_recibido.setMensaje(new Play(-1, new Point(-1, -1), new Point(-1, -1), false));
+                    paquete_recibido.setPuerto_para_turno((int) cola_clientes.peek());
+                    System.out.print("Entro un nuevo cliente de puerto " + paquete_recibido.getPuerto());
+                    System.out.println(" y se va a enviar un paquete de -1 con puerto_para_turno (int) cola_clientes.peek(): " + (int) cola_clientes.peek());
+
+                    Reenvio(IP, paquete_recibido);
+
+                }
 
                 socket.close();
 

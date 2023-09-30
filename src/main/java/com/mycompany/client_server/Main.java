@@ -26,7 +26,7 @@ public class Main
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
-        window.setTitle("Prueba de Connect the Dots");
+        window.setTitle("Prueba de Connect the Dots: " + playerName);
 
         JPanelDrawLines jPanel = new JPanelDrawLines(m, n);
         jPanel.setBackground(Color.white);

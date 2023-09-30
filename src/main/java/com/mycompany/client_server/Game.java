@@ -68,13 +68,15 @@ public class Game
                 Play replay = receivedPlays.getAt(0);
                 if (replay.playerID != this.playerID)
                 {
-                    System.out.println("Esta haciendo un replay.");
+//                    System.out.println("Jugador " + this.playerID + " Esta haciendo un replay.");
                     play(replay.dot1, replay.dot2, replay.playerID);
                     receivedPlays.deleteFirst();
+                    TimeUtilities.waitMilliseconds(6000 / (receivedPlays.getSize() + 9));    // Solo es visual.
                 }else{
                     receivedPlays.deleteFirst();
                 }
-                System.out.println("Esta en el if del while de received Plays");
+//                System.out.println("Jugador " + this.playerID + " Esta vaciando sus receivedPlays");
+                System.out.print(" replay " + this.playerID);
             }
             gameState = 1;
         }
@@ -83,8 +85,9 @@ public class Game
         Punto1 = this.cliente.Punto_1;
         Punto2 = this.cliente.Punto_2;
         ID = this.cliente.ID_jugador;
-        Play jugada_recibida = new Play(ID, Punto1, Punto2);
+        Play jugada_recibida = new Play(ID, Punto1, Punto2, false); // Aqui completedSquares siempre es false.
         receivedPlays.append(jugada_recibida);
+        System.out.println("ENTRO A ACTUALIZAR VALORES CON ID? :" + ID);
 
 //        System.out.println("jugada_recibida: " + jugada_recibida.playerID + ", " + jugada_recibida.dot1.x + ", " + jugada_recibida.dot1.y );
 //        System.out.println("jugada_recibida: " + jugada_recibida.playerID + ", " + jugada_recibida.dot2.x + ", " + jugada_recibida.dot2.y );
@@ -96,23 +99,70 @@ public class Game
     // Define estados de juego que varian segun gameState y avanzan de uno a otro cuando se leen ciertas variables.
     public void gameStates()
     {
-        System.out.println("Entro a gameStates");
+        System.out.println("Jugador " + this.playerID + " Entro a gameStates");
         Point clickedDot1 = new Point();
         Point clickedDot2 = new Point();
 
+        System.out.println("Jugador " + this.playerID + " Entra al while 0: gameState = " + gameState);
         while(gameState == 0)   // Replay de las jugadas de los otros jugadores.
         {
-            replay();
+            if (cliente.estado_del_mensaje)
+            {
+                Point dot1 = this.cliente.Punto_1;
+                Point dot2 = this.cliente.Punto_2;
+                int ID = this.cliente.ID_jugador;
+//                boolean receivedPlayCompletedSquare;
+                Play jugada_recibida = new Play(ID, dot1, dot2, false);
+                receivedPlays.append(jugada_recibida);
+                System.out.println("Jugador " + this.playerID + " ve cliente.estado_del_mensaje como true y entonces hizo receivedPlays.append(jugada_recibida)");
+                System.out.println("Jugador " + this.playerID + " dice que receivedPlays tiene " + receivedPlays.getSize() + " elementos");
+                cliente.estado_del_mensaje = false;
             }
+            // Si la posición del jugador en la cola no es de primero, entonces no pasa a game state 1 y
+            //si ve que clickedDots aumenta lo ragaña con un mensaje y lo borra.
+            if (cliente.puerto_propio == cliente.puerto_de_turno)
+            {
+                System.out.println("cliente.estado_del_mensaje AL COMENZAR SU TURNO es false : " + cliente.estado_del_mensaje);
+                System.out.println("cliente.puerto_propio == cliente.puerto_de_turno EST VRAIS");
+                System.out.println("   cliente.puerto_propio: " + cliente.puerto_propio);
+                System.out.println("   cliente.puerto_de_turno: " + cliente.puerto_de_turno);
+                replay();   // gameState aumenta en replay().
+            }
+            else
+            {
+//                System.out.println("cliente.puerto_propio == cliente.puerto_de_turno EST FAUX");
+//                System.out.println("   cliente.puerto_propio: " + cliente.puerto_propio);
+//                System.out.println("   cliente.puerto_de_turno: " + cliente.puerto_de_turno);
+//                System.out.println("   Jugador " + this.playerID + " No puede jugar y esta en while " + gameState);
+                System.out.print('.');
+                if (jPanel.clickedButtons.getSize() > 0)
+                {
+                    jPanel.clickedButtons.deleteFirst();    // Puede ser delete Last o First. Solo hay uno.
+                    System.out.println("No se puede seleccionar puntos fuera de turno. >:v");
+                }
+                TimeUtilities.waitMilliseconds(100);
+            }
+        }
 
-        System.out.println("Entra al while 1" + gameState);
+        System.out.println("Jugador " + this.playerID + " Entra al while 1: gameState = " + gameState);
+//        cliente.estado_del_mensaje = false; // No hace falta
         while(gameState == 1)   // Espera el primer clic de punto de la matriz.
         {
-            if (this.cliente.estado_del_mensaje){
-                if(this.cliente.mensaje != null){
-                    actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
-                }
-            }
+//            if (this.cliente.estado_del_mensaje)
+//            {
+//                System.out.print("Jugador " + this.playerID + " Esta en el while 1: gameState = " + gameState);
+//                System.out.print(" y this.cliente.estado_del_mensaje es: " + this.cliente.estado_del_mensaje);
+//
+//                if(this.cliente.mensaje != null)
+//                {
+//                    System.out.println(", lo cual NO es bueno. Y this.cliente.mensaje != null");
+//                    actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
+//                }
+//                else
+//                {
+//                    System.out.println(" y this.cliente.mensaje SI ES null!");
+//                }
+//            }
 
             if (jPanel.clickedButtons.getSize() > 0)
             {
@@ -124,12 +174,13 @@ public class Game
             else {System.out.print("");}
         }
 
+        System.out.println("Jugador " + this.playerID + " Entra al while 2: gameState = " + gameState);
         while(gameState == 2)   // Espera el segundo clic de punto de la matriz.
-                                //Si se completa un cuadrado, da puntos y vuelve a etapa 1.
+                                //Si se completa un cuadrado, da puntos y vuelve a etapa anterior 1.
         {
-            if (this.cliente.estado_del_mensaje){
-                actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
-            }
+//            if (this.cliente.estado_del_mensaje){
+//                actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
+//            }
 //            System.out.println("ENTRO A while 2");
 
             if (jPanel.clickedButtons.getSize() == 2)
@@ -155,21 +206,19 @@ public class Game
                     Point clickedDot1Copy = new Point(clickedDot1X, clickedDot1Y);
                     Point clickedDot2Copy = new Point(clickedDot2X, clickedDot2Y);
 
-                    Play playToSend = new Play(playerID, new Point(clickedDot1X, clickedDot1Y), new Point(clickedDot2X, clickedDot2Y));
-                    System.out.println("Jugada Enviada: " + playToSend.playerID + ", " + playToSend.dot1.x + ", " + playToSend.dot1.y );
-                    System.out.println("Jugada Enviada: " + playToSend.playerID + ", " + playToSend.dot2.x + ", " + playToSend.dot2.y);
-                    this.cliente.send(playToSend);
-                    TimeUtilities.waitMilliseconds(500);
-                    actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
-
-//
-
                     int scoreToAdd = play(clickedDot1Copy, clickedDot2Copy, playerID).getSize();
-                    System.out.println("Gano " + scoreToAdd + " p");
+                    System.out.println("Jugador " + this.playerID + " gano " + scoreToAdd + " p");
+                    boolean completedSquare = false;
+                    if (scoreToAdd > 0) {completedSquare = true;}
+
+                    Play playToSend = new Play(playerID, new Point(clickedDot1X, clickedDot1Y), new Point(clickedDot2X, clickedDot2Y), completedSquare);
+                    System.out.println("Jugada Enviada por Jugador " + this.playerID + ": "  + playToSend.playerID + ", " + playToSend.dot1.x + ", " + playToSend.dot1.y );
+                    System.out.println("Jugada Enviada por Jugador " + this.playerID + ": "  + playToSend.playerID + ", " + playToSend.dot2.x + ", " + playToSend.dot2.y);
+                    this.cliente.send(playToSend);
+
                     if (scoreToAdd > 0)
                     {
                         score += scoreToAdd;
-
 
                         gameState = 1;
 
@@ -184,12 +233,17 @@ public class Game
                         {
                             jPanel.selectedDots.deleteFirst();  // se borra justo despues de crearse el selected dot y no es apreciable.
                         }
+                        jPanel.repaint();
 
                         jPanel.clickedButtons.deleteFirst();
                         jPanel.clickedButtons.deleteFirst();
 
                     }
 
+
+
+                    TimeUtilities.waitMilliseconds(500);
+//                    actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);    // Quitar esto?
                 }
                 else
                 {
@@ -229,8 +283,8 @@ public class Game
         Label completedBy = new Label(String.valueOf(playerID));
         Dimension d;
         d = this.jPanel.getPreferredSize();
-        completedBy.setBounds(d.width * (dot.x*2 + 3) / (n+1) / 2 - 8, d.height * (dot.y*2 + 3) / (m+1) / 2 - 8, 24, 24);
-        Font font = new Font("Times New Roman", Font.BOLD, 32); // fuente?
+        completedBy.setBounds(d.width * (dot.x*2 + 3) / (n+1) / 2 - 14, d.height * (dot.y*2 + 3) / (m+1) / 2 - 14, 32, 32);
+        Font font = new Font("Times New Roman", Font.BOLD, 28); // fuente?
         completedBy.setFont(font);
         this.jPanel.add(completedBy);
     }

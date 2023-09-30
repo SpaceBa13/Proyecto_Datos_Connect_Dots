@@ -18,7 +18,7 @@ import java.util.Observable;
 public class Cliente extends Observable implements Runnable{
     Play mensaje;
     String user, comentario;
-    int puerto_propio;
+    int puerto_propio, puerto_de_turno;
     boolean estado_del_mensaje = false;
 
     Point Punto_1;
@@ -100,7 +100,7 @@ public class Cliente extends Observable implements Runnable{
         String IP = "127.0.0.1";
         String nick, comentario_recibido;
         Play mensaje_recibido;
-        int puerto_destino;
+        int puerto_destino, puerto_de_turno_recibido;
         Paquete_Datos paquete_recibido = new Paquete_Datos();
         try {
             ServerSocket servidor_cliente = new ServerSocket(puerto_propio);
@@ -108,9 +108,9 @@ public class Cliente extends Observable implements Runnable{
             Paquete_Datos paquete_entrante;
             String lectura_json;
             while(true){
-                this.estado_del_mensaje = false;
+//                this.estado_del_mensaje = false; // No hace falta.
                 recibir_datos = servidor_cliente.accept();
-                this.estado_del_mensaje = true;
+//                this.estado_del_mensaje = true; // No deberia de ser al inicio?
                 DataInputStream paquete_entrada = new DataInputStream(recibir_datos.getInputStream());
 
                 /*Json*/
@@ -123,6 +123,8 @@ public class Cliente extends Observable implements Runnable{
                 mensaje_recibido = paquete_entrante.getMensaje();
                 puerto_destino = (int) paquete_entrante.getPuerto();
                 comentario_recibido = (String) paquete_entrante.getComentario();
+                puerto_de_turno_recibido = paquete_entrante.getPuerto_para_turno();
+
 
 
                 /*Pruebas*/
@@ -134,18 +136,23 @@ public class Cliente extends Observable implements Runnable{
                 this.Punto_1 = mensaje_recibido.dot1;
                 this.Punto_2 = mensaje_recibido.dot2;
                 this.ID_jugador = mensaje_recibido.playerID;
+                this.estado_del_mensaje = true;
+                System.out.println("ESTADO DEL MENSAJE DEL CLIENTE " + this.puerto_propio + " ES true: " + this.estado_del_mensaje);
+
+                this.puerto_de_turno = puerto_de_turno_recibido;
 
 
-                System.out.println("Se recibieron los datos del servidor");
+                System.out.println("Cliente " + this.puerto_propio + " Recibio los datos del servidor");
                 System.out.println("Jugada Recibida: " + mensaje_recibido.playerID + ", " + mensaje_recibido.dot1.x + ", " + mensaje_recibido.dot1.y );
                 System.out.println("Jugada Recibida: " + mensaje_recibido.playerID + ", " + mensaje_recibido.dot2.x + ", " + mensaje_recibido.dot2.y);
                 System.out.println("ID: " + mensaje_recibido.playerID);
 
-                System.out.println("Datos propios de la clase");
+                System.out.println("Cliente " + this.puerto_propio + ": Datos propios de la clase");
                 System.out.println("Jugada Recibida: " + this.ID_jugador + ", " +  this.Punto_1.x + ", "+  this.Punto_1.y);
                 System.out.println("Jugada Recibida: " + this.ID_jugador + ", " + this.Punto_2.x + ", "+  this.Punto_2.y);
 
-                this.estado_del_mensaje = false;
+
+
                 recibir_datos.close();
                 paquete_entrada.close();
 
