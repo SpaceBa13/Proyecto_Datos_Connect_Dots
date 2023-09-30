@@ -119,10 +119,12 @@ public class Servidor implements Runnable {
         try {
             ServerSocket servidor = new ServerSocket(11111);
             String IP = "127.0.0.1";
-            String nick, mensaje;
+            String nick, comentario_recibido;
+            Play mensaje;
             int puerto_destino;
             Paquete_Datos paquete_recibido;
             String lectura_json;
+
 
             while (true) {
                 //Recibe los datos enviados por el cliente
@@ -132,12 +134,17 @@ public class Servidor implements Runnable {
                 /*Json*/
                 ObjectMapper recibido_json = new ObjectMapper();
                 lectura_json = (String) paquete_entrada.readUTF();
-                paquete_recibido = recibido_json.readValue(lectura_json, Paquete_Datos.class);
+                System.out.println("Antes del ERROR.");
 
+                paquete_recibido = recibido_json.readValue(lectura_json, Paquete_Datos.class);
+                System.out.println(paquete_recibido.getMensaje());
                 /*Obtiene los datos del Objecto que entro por el socket*/
                 nick = paquete_recibido.getUser();
                 mensaje = paquete_recibido.getMensaje();
+//                Mensaje = (LinkedList<Play>) mensaje;
+
                 puerto_destino = paquete_recibido.getPuerto();
+                comentario_recibido = paquete_recibido.getComentario();
                 agregar_cliente_lista(puerto_destino);
 
                 /*Zona de Purebas*/
@@ -152,14 +159,15 @@ public class Servidor implements Runnable {
                 cola_clientes.Display();
                 //Reenvio de Datos almacenados en el servidor hacia los clientes
 
-                if(lista_clientes.size >= 1){
-                    if(puerto_destino == (int) cola_clientes.peek()){
-                        Reenvio(IP, paquete_recibido);
-                        enviar_cliente_atras();
-                    }else{
-                        System.out.println("No es tu turno");
-                    }
-                }
+//                if(lista_clientes.size >= 1){
+//                    if(puerto_destino == (int) cola_clientes.peek()){
+//                        Reenvio(IP, paquete_recibido);
+//                        enviar_cliente_atras();
+//                    }else{
+//                        System.out.println("No es tu turno");
+//                    }
+//                }
+                Reenvio(IP, paquete_recibido);
 
                 socket.close();
 

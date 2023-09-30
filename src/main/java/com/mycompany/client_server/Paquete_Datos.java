@@ -12,11 +12,12 @@ import java.io.Serializable;
  */
 public class Paquete_Datos implements Serializable {
     private int puerto;
-    private String user, mensaje;
-    public String getMensaje() {
+    private String user, comentario;
+    public Play mensaje;
+    public Play getMensaje() {
         return mensaje;
     }
-    public void setMensaje(String mensaje) {
+    public void setMensaje(Play mensaje) {
         this.mensaje = mensaje;
     }
     public String getUser() {
@@ -31,4 +32,7 @@ public class Paquete_Datos implements Serializable {
     public void setPuerto(int puerto) {
         this.puerto = puerto;
     }
+
+    public String getComentario() {return comentario;}
+    public void setComentario(String comentario) {this.comentario = comentario;}
 }

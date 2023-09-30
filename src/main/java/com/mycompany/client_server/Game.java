@@ -1,6 +1,7 @@
 package com.mycompany.client_server;
 
 import java.awt.*;
+import java.util.Random;
 
 public class Game
 {
@@ -8,9 +9,18 @@ public class Game
     public boolean turn = true;
     public int score = 0;
     public int playerID;
+    public int puerto_propio;
     public int m,n;
     public Matrix nodeMatrix, horizontalLineMatrix, verticalLineMatrix, squareMatrix;
     public JPanelDrawLines jPanel;
+
+    Random puerto = new Random();
+    int puerto_cliente = puerto.nextInt(5000, 9999);
+
+    Cliente cliente = new Cliente( "a", puerto_cliente);
+
+
+
 
     // sentPlays es el mensaje que se enviara al servidor y
     //siendo recibido por todos los clientes (remitente inclusive) se concatena a receivedPlays.
@@ -27,12 +37,42 @@ public class Game
         squareMatrix = new Matrix(m-1,n-1);
         this.jPanel = jPanel;
         this.playerID = playerID;
+        Thread hilo_cliente = new Thread(cliente);
+        hilo_cliente.start();
+
+
+        while (true){gameStates();}
+
+    }
+    public Game(int m, int n, JPanelDrawLines jPanel, int playerID, LinkedList<Play> receivedPlays)
+    {
+        this.m = m;
+        this.n = n;
+        nodeMatrix = new Matrix(m,n);
+        horizontalLineMatrix = new Matrix(m,n-1);
+        verticalLineMatrix = new Matrix(m-1,n);
+        squareMatrix = new Matrix(m-1,n-1);
+        this.jPanel = jPanel;
+        this.playerID = playerID;
+        this.receivedPlays = receivedPlays;
+        Thread hilo_cliente = new Thread(cliente);
+        hilo_cliente.start();
 
 
         while (true){gameStates();}
     }
 
-
+    public void replay(){
+                while (receivedPlays.getSize() > 0)
+                {
+                    Play replay = receivedPlays.getAt(0);
+                    System.out.println("Esta haciendo un replay.");
+                    play(replay.dot1, replay.dot2, replay.playerID);
+                    receivedPlays.deleteFirst();
+                    System.out.println("Esta en el if del while de received Plays");
+//                     TimeUtilities.waitMilliseconds(250);
+                }
+        }
 
 
     // Define estados de juego que varian segun gameState y avanzan de uno a otro cuando se leen ciertas variables.
@@ -51,16 +91,19 @@ public class Game
                     Play replay = receivedPlays.getAt(0);
                     if (replay.playerID != playerID)
                     {
-                        play(replay.dot1, replay.dot2);
+                        System.out.println("Esta haciendo un replay.");
+                        play(replay.dot1, replay.dot2, replay.playerID);
                     }
                     receivedPlays.deleteFirst();
-                    // TimeUtilities.waitMilliseconds(250);
+                    System.out.println("Esta en el if del while de received Plays");
+//                     TimeUtilities.waitMilliseconds(250);
                 }
                 gameState ++;
 //                turn = false;
             }
+            System.out.println("Esta en del while de received Plays");
         }
-
+        System.out.println("Entra al while 1");
         while(gameState == 1)   // Espera el primer clic de punto de la matriz.
         {
 
@@ -103,12 +146,16 @@ public class Game
                     Point clickedDot1Copy = new Point(clickedDot1X, clickedDot1Y);
                     Point clickedDot2Copy = new Point(clickedDot2X, clickedDot2Y);
 
-                    sentPlays.append(new Play(playerID, new Point(clickedDot1X, clickedDot1Y), new Point(clickedDot2X, clickedDot2Y)));
-                    int scoreToAdd = play(clickedDot1Copy, clickedDot2Copy).getSize();
+//                    sentPlays.append(new Play(playerID, new Point(clickedDot1X, clickedDot1Y), new Point(clickedDot2X, clickedDot2Y)));
+
+                    int scoreToAdd = play(clickedDot1Copy, clickedDot2Copy, playerID).getSize();
                     System.out.println("Gano " + scoreToAdd + " p");
                     if (scoreToAdd > 0)
                     {
                         score += scoreToAdd;
+
+                        Play playToSend = new Play(playerID, new Point(clickedDot1X, clickedDot1Y), new Point(clickedDot2X, clickedDot2Y));
+
                         gameState = 1;
 
                         jPanel.clickedButtons.deleteFirst();
@@ -123,14 +170,58 @@ public class Game
                             jPanel.selectedDots.deleteFirst();  // se borra justo despues de crearse el selected dot y no es apreciable.
                         }
 
+                        Play playToSend = new Play(playerID, new Point(clickedDot1X, clickedDot1Y), new Point(clickedDot2X, clickedDot2Y));
+                        System.out.println("Jugada Enviada: " + playToSend.playerID + ", " + playToSend.dot1.x + ", " + playToSend.dot1.y );
+                        System.out.println("Jugada Enviada: " + playToSend.playerID + ", " + playToSend.dot2.x + ", " + playToSend.dot2.y);
+
+                        this.cliente.send(playToSend);
+                        TimeUtilities.waitMilliseconds(2000);
+
+                        Point Punto1 = this.cliente.Punto_1;
+                        Point Punto2 = this.cliente.Punto_2;
+                        int ID = this.cliente.ID_jugador;
+                        Play jugada_recibida = new Play(ID, Punto1, Punto2);
+
+//                        Play jugada_recibida = this.cliente.mensaje;
+                        receivedPlays.append(jugada_recibida);
+//                        replay();
+                        System.out.println("jugada_recibida: " + jugada_recibida.playerID + ", " + jugada_recibida.dot1.x + ", " + jugada_recibida.dot1.y );
+                        System.out.println("jugada_recibida: " + jugada_recibida.playerID + ", " + jugada_recibida.dot2.x + ", " + jugada_recibida.dot2.y );
+
+
                         jPanel.clickedButtons.deleteFirst();
                         jPanel.clickedButtons.deleteFirst();
+
+
+
+
+
+//                        while (true)
+//                        {
+//                            if(cliente == null){
+//                                System.out.println("Error Desaparecio el Cliente");
+//                            }
+//                            if (cliente.estado_del_mensaje)
+//                            {
+//
+//                                receivedPlays.append(cliente.mensaje);
+//                                System.out.println("El cliente recibio respuesta");
+//                                System.out.println(cliente.mensaje);
+//                                break;
+//                            }else{
+////                                System.out.println("no hubo respuesta");
+//                            }
+//                        }
+//                        System.out.println("Salio del while");
+
                     }
+
                 }
                 else
                 {
                     jPanel.clickedButtons.deleteLast();
                     System.out.println("Error: los puntos no son adyacentes");
+
                 }
             }
         }
@@ -169,7 +260,7 @@ public class Game
         }
     }
 
-    public void drawSquareLabel(Point dot)
+    public void drawSquareLabel(Point dot, int playerID)
     {
         Label completedBy = new Label(String.valueOf(playerID));
         Dimension d;
@@ -195,7 +286,7 @@ public class Game
     }
 
     // Escribe los cuadrados creados en squareMatrix y crea y devuelve una LinkedList con las coordenadas Point de los cuadrados.
-    LinkedList<Point> checkSquares(Point dot1, Point dot2, char connection)
+    LinkedList<Point> checkSquares(Point dot1, Point dot2, char connection, int playerID)
     {
         LinkedList<Point> newSquares = new LinkedList<>();
         // h o H es horizontal.
@@ -209,7 +300,7 @@ public class Game
             {
                 squareMatrix.setAt(dot1, true); // La linea horizontal es el lado superior de un nuevo cuadrado segun el if.
                 newSquares.append(dot1);
-                drawSquareLabel(dot1);
+                drawSquareLabel(dot1, playerID);
             }
             // comprueba si se completa un cuadrado con la nueva linea como lado inferior.
             dotAux.y -= 2;  // dotAux es arriba; dot2, arriba y a la derecha.
@@ -218,7 +309,7 @@ public class Game
             {
                 squareMatrix.setAt(dotAux, true); // La linea horizontal es el lado inferior de un nuevo cuadrado segun el if.
                 newSquares.append(dotAux);
-                drawSquareLabel(dotAux);
+                drawSquareLabel(dotAux, playerID);
             }
         }
         // v o V es vertical.
@@ -232,7 +323,7 @@ public class Game
             {
                 squareMatrix.setAt(dot1, true); // La linea vertical es el lado izquierdo de un nuevo cuadrado segun el if.
                 newSquares.append(dot1);
-                drawSquareLabel(dot1);
+                drawSquareLabel(dot1, playerID);
             }
             // comprueba si se completa un cuadrado con la nueva linea como lado derecho.
             dotAux.x -= 2;  // dot1 es la posicion actual; dotAux, izquierda; dot2, abajo y a la izquierda.
@@ -241,7 +332,7 @@ public class Game
             {
                 squareMatrix.setAt(dotAux, true); // La linea horizontal es el lado inferior de un nuevo cuadrado segun el if.
                 newSquares.append(dotAux);
-                drawSquareLabel(dotAux);
+                drawSquareLabel(dotAux, playerID);
             }
         }
         return newSquares;
@@ -249,7 +340,7 @@ public class Game
     // Devuelve una LinkedList con las posiciones de los cuadrados creados en la squareMatrix. Los puntos dot1 y 2 son
     //los que une la nueva linea y replay indica si es una jugada por parte del usuario o si se esta usando
     //automaticamente la funcion con los datos de receivedPlays.
-    public LinkedList<Point> play(Point dot1, Point dot2)
+    public LinkedList<Point> play(Point dot1, Point dot2, int playerID)
     {
         LinkedList<Point> newSquares = new LinkedList<>();
 
@@ -260,25 +351,25 @@ public class Game
             case 'H':
                 if (dot2.x < n-1 && dot2.y < m)
                 {
-                    newSquares = checkSquares(dot2, dot1, connection);  // Da los puntos al reves para que dot1 sea el menor
+                    newSquares = checkSquares(dot2, dot1, connection, playerID);  // Da los puntos al reves para que dot1 sea el menor
                 }
                 break;
             case 'V':
                 if (dot2.x < n && dot2.y < m-1)
                 {
-                    newSquares = checkSquares(dot2, dot1, connection);  // Da los puntos al reves para que dot1 sea el menor
+                    newSquares = checkSquares(dot2, dot1, connection, playerID);  // Da los puntos al reves para que dot1 sea el menor
                 }
                 break;
             case 'h':
                 if (dot1.x < n-1 && dot1.y < m)
                 {
-                    newSquares = checkSquares(dot1, dot2, connection);  // Da los puntos al reves para que dot1 sea el menor
+                    newSquares = checkSquares(dot1, dot2, connection, playerID);  // Da los puntos al reves para que dot1 sea el menor
                 }
                 break;
             case 'v':
                 if (dot1.x < n && dot1.y < m-1)
                 {
-                    newSquares = checkSquares(dot1, dot2, connection);  // Da los puntos al reves para que dot1 sea el menor
+                    newSquares = checkSquares(dot1, dot2, connection, playerID);  // Da los puntos al reves para que dot1 sea el menor
                 }
                 break;
             case 'E':

@@ -5,6 +5,7 @@ public class Play
     public Point dot1;
     public Point dot2;
 
+    public Play(){}
     public Play(int playerID, Point dot1, Point dot2)
     {
         this.playerID = playerID;

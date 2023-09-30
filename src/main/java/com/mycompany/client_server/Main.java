@@ -7,23 +7,23 @@
  */
 package com.mycompany.client_server;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
 public class Main
 {
 
-    public static void main(String[] args)
+
+    public static void createGame(int m, int n, String playerName)
     {
-        int m = 4;
-        int n = 4;
-        int lineCount = 2*m*n - m - n;
-        int tiempoDeEspera = 2500 / lineCount;
-
-
-
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
@@ -36,6 +36,8 @@ public class Main
         int panelHeight = 640;
         jPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
 
+
+        System.out.println("La ventana de A esta anadiendo un jPanel");
         window.add(jPanel);
         window.pack();
         window.setLocationRelativeTo(null);
@@ -44,100 +46,111 @@ public class Main
         LinkedList<Line> Lineas = new LinkedList<>();   // NO hace falta
         jPanel.drawnLines = Lineas;                     // NO hace falta
 
-        for (int i = 0; i < 5; i++) {
-            System.out.println(Color.BLUE);
-        }
-
-
-
-
 //        jPanel.doLayout();
         jPanel.setLayout(null);
 
-//        for (int i = 0; i < m; i++)
-//        {
-//            for (int j = 0; j < n; j++)
-//            {
-//                JButton b = new JButton("BOTON NO TIENE TEXTO.");
-//                b.setBounds(panelWidth * (j+1) / (n+1) - 4, panelHeight * (i+1) / (m+1) - 4, 16, 16);
-//                jPanel.add(b);
-//
-//            }
-//        }
         jPanel.placeButtons();
         System.out.println("jPanel.clickedButtons.getSize() ES: " + jPanel.clickedButtons.getSize());
 
 
-
-
         Game g = new Game(m,n, jPanel, 0);
+
+
+//        Play jugada1 = new Play(1, new Point(1,2), new Point(1,3));
+//        Play jugada2 = new Play(1, new Point(2,2), new Point(2,3));
+//        Play jugada3 = new Play(1, new Point(1,2), new Point(2,2));
+//        Play jugada4 = new Play(300, new Point(1,3), new Point(2,3));
+//
+//        LinkedList<Play> listaJugadas = new LinkedList<>();
+//        listaJugadas.append(jugada1);
+//        listaJugadas.append(jugada2);
+//        listaJugadas.append(jugada3);
+//        listaJugadas.append(jugada4);
+//
+//        Game g = new Game(m,n, jPanel, 0, listaJugadas);
+
 //        g.play(new Point(1,1), new Point(2,1));
 //        g.showMatrices(1);
 //        System.out.println();
 
-        TimeUtilities.waitMilliseconds(300);
+//        TimeUtilities.waitMilliseconds(300);
+    }
 
-//
-//        for (int i = 0; i < m; i++)
-//        {
-//            for (int j = 0; j < n-1; j++)
-//            {
-////                System.out.println("x0,x1: " + j + ' ' + (j+1));
-////                System.out.println("y0,y1: " + i + ' ' + i);
-//                g.play(new Point(j,i), new Point(j+1,i));
-////                g.showMatrices(j+3*i);
-////                System.out.println();
-//
-//                TimeUtilities.waitMilliseconds(tiempoDeEspera);
-//
-//            }
-//        }
-//        for (int i = 0; i < m-1; i++)
-//        {
-//            for (int j = 0; j < n; j++)
-//            {
-////                System.out.println("x0,x1: " + j + ' ' + j);
-////                System.out.println("y0,y1: " + i + ' ' + (i+1));
-//                g.play(new Point(j,i), new Point(j,i+1));
-////                g.showMatrices(j+4*i + m*(n-1));
-////                System.out.println();
-//
-//                TimeUtilities.waitMilliseconds(tiempoDeEspera);
-//
-//            }
-//        }
+    public static void main(String[] args) throws JsonProcessingException {
+//        int m = 5;
+//        int n = 5;
+//        int lineCount = 2*m*n - m - n;
+//        int tiempoDeEspera = 2500 / lineCount;
+
+        JFrame window = new JFrame();
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setResizable(false);
+        window.setTitle("Prueba de Connect the Dots");
+
+        JPanelDrawLines jPanel = new JPanelDrawLines();
+        jPanel.setBackground(Color.white);
+
+        int panelWidth = 960;
+        int panelHeight = 640;
+        jPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
+
+        window.add(jPanel);
+        window.pack();
+        window.setLocationRelativeTo(null);
+        window.setVisible(true);
+
+//        String filasM = JOptionPane.showInputDialog(window, "Ingrese el numero de filas");
 
 
 
+        JButton createGameButton = new JButton("createGameButton");
+        int auxWidth = (panelWidth / 2) - 48;
+        int auxHeight = (panelHeight * 3) / 4;
+        createGameButton.setBounds(auxWidth, auxHeight, 96, 32);
+//        createGameButton.setBounds(0,0, 48, 16);
+        createGameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                System.out.println("Llego a createGameButton");
+
+//                createGame(4, 3, "A");
+
+            }
+        });
+        createGameButton.setVisible(true);
+        jPanel.add(createGameButton);
+
+
+//        JTextField rowM = new JTextField("");
+//        rowM.setBounds(panelWidth / 4 - 48, panelHeight / 4, 96, 32);
+
+//        rowM.setVisible(true);
+
+        System.out.println("Adds");
+//        jPanel.add(rowM);
+
+
+//        Play jugada1 = new Play(1, new Point(1,2), new Point(1,3));
+//        Play jugada2 = new Play(1, new Point(2,2), new Point(2,3));
+//        LinkedList listaJugadas = new LinkedList();
+//        listaJugadas.append(jugada1);
+//        listaJugadas.append(jugada2);
+
+
+//        Random puerto = new Random();
+//        int puerto_propio = puerto.nextInt(5000, 9999);
 //
-//
-//
-//        for (int i = 0; i < m-1; i++) // m-1
-//        {
-//            for (int j = 0; j < n; j++) // n
-//            {
-//                Line l = new Line(new Point(j,i), true, m,n);
-//                Lineas.append(l);
-//
-//                TimeUtilities.waitMilliseconds(tiempoDeEspera);
-//
-//                jPanel.repaint();
-//            }
-//        }
-//
-////        jPanel.drawnLines = Lineas;
-//
-//        for (int i = 0; i < m; i++) // m
-//        {
-//            for (int j = 0; j < n-1; j++) // n-1
-//            {
-//                Line l = new Line(new Point(j,i), false, m,n);
-//                Lineas.append(l);
-//
-//                TimeUtilities.waitMilliseconds(tiempoDeEspera);
-//
-//                jPanel.repaint();
-//            }
-//        }
+//        Cliente cliente = new Cliente(listaJugadas, "a", puerto_propio, "PRUEBA");
+//        Thread hilo_cliente = new Thread(cliente);
+//        hilo_cliente.start();
+//        ObjectMapper mapper = new ObjectMapper();
+//        String Envio_json = mapper.writeValueAsString(jugada1);
+//        System.out.println(Envio_json);
+//        paquete_recibido = recibido_json.readValue(lectura_json, Paquete_Datos.class);
+
+
+        createGame(4, 3, "A");
+
     }
 }

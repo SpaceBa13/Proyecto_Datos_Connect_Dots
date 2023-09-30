@@ -26,6 +26,8 @@ public class JPanelDrawLines extends JPanel implements ActionListener
     // Los dots dados clic. Se modifica en JPanel jPanel a traves de los botones.
     public LinkedList<Point> clickedButtons = new LinkedList<>();
 
+    public JPanelDrawLines(){}
+
     public JPanelDrawLines(int m, int n)
     {
         this.m = m;
@@ -119,7 +121,7 @@ public class JPanelDrawLines extends JPanel implements ActionListener
             int G = (int)Math.round(Math.sin(t + 2) * 64.0 + 191.0);
             int B = (int)Math.round(Math.sin(t) * 64.0 + 191.0);
 
-            System.out.println("R ES: " + R);
+//            System.out.println("R ES: " + R);
             g2.setColor(new Color(R, G, B));
 
             t += 0.1;

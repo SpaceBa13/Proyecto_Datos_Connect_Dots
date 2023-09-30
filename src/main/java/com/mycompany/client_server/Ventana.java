@@ -112,11 +112,12 @@ public class Ventana extends javax.swing.JFrame implements Observer {
      */
     private void Send_BtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Send_BtnActionPerformed
         String nick = this.nick_text.getText();
-        String mensaje = this.Send_Text.getText();
+//        LinkedList<Play> mensaje = this.Send_Text.getText();
         this.Send_Text.setText("");
-        Cliente cliente = new Cliente(mensaje, nick, puerto_propio);
-        Thread hilo_cliente = new Thread(cliente);
-        hilo_cliente.start();
+//        LinkedList<Play> ListaAux = new LinkedList<>();
+//        Cliente cliente = new Cliente(ListaAux, nick, puerto_propio);
+//        Thread hilo_cliente = new Thread(cliente);
+//        hilo_cliente.start();
     }//GEN-LAST:event_Send_BtnActionPerformed
 
     private void nick_textActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nick_textActionPerformed
