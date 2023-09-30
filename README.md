@@ -1,4 +1,4 @@
 # Proyecto_Datos_Connect_Dots
 -Brayan Alpizar
--Estevan Campos
+-Esteban Campos
 -Dario Garro
