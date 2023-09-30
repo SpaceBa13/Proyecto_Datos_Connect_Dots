@@ -53,7 +53,7 @@ public class Main
         System.out.println("jPanel.clickedButtons.getSize() ES: " + jPanel.clickedButtons.getSize());
 
 
-        Game g = new Game(m,n, jPanel, 0);
+        Game g = new Game(m,n, jPanel, 1);
 
 
 //        Play jugada1 = new Play(1, new Point(1,2), new Point(1,3));
@@ -150,7 +150,7 @@ public class Main
 //        paquete_recibido = recibido_json.readValue(lectura_json, Paquete_Datos.class);
 
 
-        createGame(4, 3, "A");
+        createGame(5, 5, "A");
 
     }
 }

@@ -102,20 +102,7 @@ public class Game
 
         while(gameState == 0)   // Replay de las jugadas de los otros jugadores.
         {
-                while (receivedPlays.getSize() > 0)
-                {
-                    Play replay = receivedPlays.getAt(0);
-                    if (replay.playerID == this.playerID)
-                    {
-                        System.out.println("Esta haciendo un replay.");
-                        play(replay.dot1, replay.dot2, replay.playerID);
-                        System.out.println("dentro de replay" + gameState);
-                    }
-                    receivedPlays.deleteFirst();
-                    System.out.println("Esta en el if del while de received Plays");
-//                     TimeUtilities.waitMilliseconds(250);
-                }
-                gameState = 1;
+            replay();
             }
 
         System.out.println("Entra al while 1" + gameState);
@@ -125,9 +112,7 @@ public class Game
                 if(this.cliente.mensaje != null){
                     actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
                 }
-
             }
-
 
             if (jPanel.clickedButtons.getSize() > 0)
             {
@@ -169,18 +154,20 @@ public class Game
                     Point clickedDot1Copy = new Point(clickedDot1X, clickedDot1Y);
                     Point clickedDot2Copy = new Point(clickedDot2X, clickedDot2Y);
 
-//                    sentPlays.append(new Play(playerID, new Point(clickedDot1X, clickedDot1Y), new Point(clickedDot2X, clickedDot2Y)));
+                    Play playToSend = new Play(playerID, new Point(clickedDot1X, clickedDot1Y), new Point(clickedDot2X, clickedDot2Y));
+                    System.out.println("Jugada Enviada: " + playToSend.playerID + ", " + playToSend.dot1.x + ", " + playToSend.dot1.y );
+                    System.out.println("Jugada Enviada: " + playToSend.playerID + ", " + playToSend.dot2.x + ", " + playToSend.dot2.y);
+                    this.cliente.send(playToSend);
+                    TimeUtilities.waitMilliseconds(100);
+                    actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
+
+//
 
                     int scoreToAdd = play(clickedDot1Copy, clickedDot2Copy, playerID).getSize();
                     System.out.println("Gano " + scoreToAdd + " p");
                     if (scoreToAdd > 0)
                     {
                         score += scoreToAdd;
-
-                        Play playToSend = new Play(playerID, new Point(clickedDot1X, clickedDot1Y), new Point(clickedDot2X, clickedDot2Y));
-                        this.cliente.send(playToSend);
-                        TimeUtilities.waitMilliseconds(1000);
-                        actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
 
 
                         gameState = 1;
@@ -197,17 +184,10 @@ public class Game
                             jPanel.selectedDots.deleteFirst();  // se borra justo despues de crearse el selected dot y no es apreciable.
                         }
 
-                        Play playToSend = new Play(playerID, new Point(clickedDot1X, clickedDot1Y), new Point(clickedDot2X, clickedDot2Y));
-                        System.out.println("Jugada Enviada: " + playToSend.playerID + ", " + playToSend.dot1.x + ", " + playToSend.dot1.y );
-                        System.out.println("Jugada Enviada: " + playToSend.playerID + ", " + playToSend.dot2.x + ", " + playToSend.dot2.y);
-
-                        this.cliente.send(playToSend);
-                        TimeUtilities.waitMilliseconds(1000);
 
 //                        Point Punto1 = this.cliente.Punto_1;
 //                        Point Punto2 = this.cliente.Punto_2;
 //                        int ID = this.cliente.ID_jugador;
-                        actualizar_valores(this.cliente.Punto_1, this.cliente.Punto_2, this.cliente.ID_jugador);
 //                        Play jugada_recibida = new Play(ID, Punto1, Punto2);
 //                        Play jugada_recibida = this.cliente.mensaje;
 //                        receivedPlays.append(jugada_recibida);
@@ -396,9 +376,6 @@ public class Game
                     newSquares = checkSquares(dot1, dot2, connection, playerID);  // Da los puntos al reves para que dot1 sea el menor
                 }
                 break;
-            case 'E':
-                System.out.println("Error en Game: los puntos dot1 " + dot1.x + ',' + dot1.y + " y dot2 " + dot2.x + ',' + dot2.y + " tienen distancia mayor a 1");
-                return null;    //Error si los puntos dados son invalidos.
         }
         return newSquares;
     }
